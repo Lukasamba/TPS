@@ -31,14 +31,17 @@ onMounted(() => {
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" ref="navBarRef" id="navbarContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/teams">Komandos</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/projects">Projektai</router-link>
-          </li>
-        </ul>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                  <router-link class="nav-link" to="/teams">Komandos</router-link>
+              </li>
+              <li class="nav-item">
+                  <router-link class="nav-link" to="/projects">Projektai</router-link>
+              </li>
+              <li class="nav-item">
+                  <router-link class="nav-link" to="/calendar">Kalendorius</router-link>
+              </li>
+          </ul>
       </div>
     </div>
   </nav>
