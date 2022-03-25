@@ -6,8 +6,8 @@ const RequestedScopes = [
   "openid",
   "email",
   "profile",
-  "Calendars.ReadWrite",
-  "Calendars.ReadWrite.Shared",
+  // "Calendars.ReadWrite",
+  // "Calendars.ReadWrite.Shared",
 ];
 
 type StateChangeCallback = () => void;
