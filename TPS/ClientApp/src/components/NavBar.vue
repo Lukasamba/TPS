@@ -45,6 +45,11 @@ onMounted(() => {
           <li class="nav-item">
             <router-link class="nav-link" to="/projects">Projektai</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/calendar"
+              >Kalendorius</router-link
+            >
+          </li>
         </ul>
         <div class="navbar-nav">
           <template v-if="isLoggedIn">
