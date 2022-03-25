@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { Collapse } from "bootstrap";
 import { onMounted, ref } from "vue";
+import { useAuthModule } from "../store/modules/auth";
+import { LoginMsal, LogoutMsal } from "../msal";
 
 const navBarRef = ref<HTMLElement | null>(null);
 const collapse = ref<Collapse | null>(null);
+
+const {
+  state: { isLoggedIn, displayName },
+} = useAuthModule();
 
 onMounted(() => {
   navBarRef.value;
@@ -25,6 +31,7 @@ onMounted(() => {
             collapse?.toggle();
           }
         "
+        v-bind:class="{ active: true }"
         aria-controls="navbarContent"
         aria-label="Toggle navigation"
       >
@@ -39,6 +46,17 @@ onMounted(() => {
             <router-link class="nav-link" to="/projects">Projektai</router-link>
           </li>
         </ul>
+        <div class="navbar-nav">
+          <template v-if="isLoggedIn">
+            <span class="navbar-text">Prisijungta kaip {{ displayName }} </span>
+            <div class="nav-item">
+              <a href="#" @click="LogoutMsal" class="nav-link">Atsijungti</a>
+            </div>
+          </template>
+          <div v-else class="nav-item">
+            <a href="#" @click="LoginMsal" class="nav-link">Prisijungti</a>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
