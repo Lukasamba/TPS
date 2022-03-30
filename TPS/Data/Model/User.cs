@@ -15,6 +15,14 @@ namespace TPS.Data.Model
         public string Email { get; set; }
         [MaxLength(256)]
         public string Name { get; set; }
-        public virtual HashSet<TeamMember> Memberships { get; set; }
+        public virtual HashSet<TeamMember>? Memberships { get; set; }
+
+        public User(string id, string email, string name){
+            Id = id;
+            Email = email;
+            Name = name;
+        }
+        
     }
+
 }

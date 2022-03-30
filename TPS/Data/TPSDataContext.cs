@@ -26,8 +26,9 @@ namespace TPS.Data
             }
         }
 
-        public DbSet<Team> Teams { get; set; }
-        public DbSet<TeamMember> TeamMembers { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Project> Projects => Set<Project>();
+        public DbSet<Team> Teams => Set<Team>(); 
+        public DbSet<TeamMember> TeamMembers => Set<TeamMember>();
+        public DbSet<User> Users => Set<User>();
     }
 }

@@ -14,8 +14,12 @@ namespace TPS.Data.Model
         public Guid TeamId { get; set; }
         [MaxLength]
         public Boolean IsTeamLead { get; set; }
-        public virtual Team Team { get; set; }
-        public virtual User User { get; set; }
+        public virtual Team? Team { get; set; }
+        public virtual User? User { get; set; }
         
+        public TeamMember(string userid, Guid teamid){
+            UserId = userid;
+            TeamId = teamid;
+        }
     }
 }

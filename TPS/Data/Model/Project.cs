@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 
 namespace TPS.Data.Model
 {
-    public class Team
+    public class Project
     {
         public Guid Id { get; set; }
         [MaxLength(256)]
         public string Name { get; set; }
         [MaxLength]
-        public string Description { get; set; }
-        public virtual HashSet<TeamMember> Memberships { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public virtual HashSet<Team>? Teams { get; set; }
+
+        public Project(string name){
+            Name = name;
+        }
         
     }
 }
