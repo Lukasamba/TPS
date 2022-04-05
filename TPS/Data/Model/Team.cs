@@ -15,6 +15,7 @@ namespace TPS.Data.Model
         [MaxLength]
         public string Description { get; set; } = string.Empty;
         public virtual HashSet<TeamMember>? Memberships { get; set; }
+        public virtual HashSet<Project>? Projects { get; set; }
 
         public Team(string name){
             Name = name;
