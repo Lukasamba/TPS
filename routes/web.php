@@ -18,3 +18,6 @@ Route::get('/', [MainController::class, 'index'])->name('HomePage');
 Route::get('/teams', [MainController::class, 'openTeamsPage'])->name('TeamsPage');
 Route::get('/projects', [MainController::class, 'openProjectsPage'])->name('ProjectsPage');
 Route::get('/calendar', [MainController::class, 'openCalendarPage'])->name('CalendarPage');
+Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
+Route::get('/callback', [AuthController::class, 'callback'])->name('callback');
+
