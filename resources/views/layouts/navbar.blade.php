@@ -24,7 +24,7 @@
           </ul>
           <ul class="navbar-nav ms-auto d-flex">
             @if (!Session::has('userInfo'))
-                
+
             <li class="nav-item">
               <a class="nav-link" href="#">Prisijungti</a>
             </li>
@@ -34,14 +34,14 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Atsijungti</a>
             </li>
-            
+
             @endif
           </ul>
         </div>
       </div>
     </nav>
-
+    <div>
     @yield('content')
-    
+    </div>
 </body>
 </html>
