@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MainController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [MainController::class, 'index'])->name('HomePage');
+Route::get('/teams', [MainController::class, 'openTeamsPage'])->name('TeamsPage');
+Route::get('/projects', [MainController::class, 'openProjectsPage'])->name('ProjectsPage');
+Route::get('/calendar', [MainController::class, 'openCalendarPage'])->name('CalendarPage');
