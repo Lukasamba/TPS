@@ -94,4 +94,10 @@ class AuthController extends Controller
       ->with('error', $request->query('error'))
       ->with('errorDetail', $request->query('error_description'));
   }
+  public function signout()
+{
+  $tokenCache = new TokenCache();
+  $tokenCache->clearTokens();
+  return redirect('/');
+}
 }

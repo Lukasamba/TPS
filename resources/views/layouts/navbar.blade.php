@@ -23,19 +23,19 @@
             </li>
           </ul>
           <ul class="navbar-nav ms-auto d-flex">
-            @if(isset($userName))
+            @if(session()->has('userName'))
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                   aria-haspopup="true" aria-expanded="false">
-                  @if(isset($user_avatar))
+                  {{-- @if(isset($user_avatar))
                     <img src="{{ $user_avatar }}" class="rounded-circle align-self-center mr-2" style="width: 32px;">
-                  @else
+                  @else --}}
                     <i class="far fa-user-circle fa-lg rounded-circle align-self-center mr-2" style="width: 32px;"></i>
-                  @endif
+                  {{-- @endif --}}
                 </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <h5 class="dropdown-item-text mb-0">{{ $userName }}</h5>
-                  <p class="dropdown-item-text text-muted mb-0">{{ $userEmail }}</p>
+                <div class="dropdown-menu dropdown-menu-middle">
+                  <h5 class="dropdown-item-text mb-0">{{ session()->get('userName') }}</h5>
+                  <p class="dropdown-item-text text-muted mb-0">{{ session()->get('userEmail') }}</p>
                   <div class="dropdown-divider"></div>
                   <a href="/signout" class="dropdown-item">Sign Out</a>
                 </div>
