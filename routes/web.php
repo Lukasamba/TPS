@@ -21,3 +21,5 @@ Route::get('/projects', [MainController::class, 'openProjectsPage'])->name('Proj
 Route::get('/calendar', [MainController::class, 'openCalendarPage'])->name('CalendarPage');
 Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::get('/callback', [AuthController::class, 'callback'])->name('callback');
+Route::get('/signout', [AuthController::class, 'signout'])->name('signout');
+
