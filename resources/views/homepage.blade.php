@@ -8,7 +8,7 @@
     <h4>You are logged in as user: {{ $userName }}</h4>
     <p>Use the navigation bar at the top of the page to get started.</p>
   @else
-    <a href="/signin" class="btn btn-primary btn-large">Click here to sign in</a>
+    <a href="{{route('signin')}}" class="btn btn-primary btn-large">Click here to sign in</a>
   @endif
 </div>
 @endsection

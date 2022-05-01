@@ -49,8 +49,17 @@
         </div>
       </div>
     </nav>
-    <div>
-    @yield('content')
-    </div>
+    <main role="main" class="container">
+        @if(session('error'))
+          <div class="alert alert-danger" role="alert">
+            <p class="mb-3">{{ session('error') }}</p>
+            @if(session('errorDetail'))
+              <pre class="alert-pre border bg-light p-2"><code>{{ session('errorDetail') }}</code></pre>
+            @endif
+          </div>
+        @endif
+
+        @yield('content')
+      </main>
 </body>
 </html>
