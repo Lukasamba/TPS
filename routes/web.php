@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,3 @@ Route::get('/projects', [MainController::class, 'openProjectsPage'])->name('Proj
 Route::get('/calendar', [MainController::class, 'openCalendarPage'])->name('CalendarPage');
 Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::get('/callback', [AuthController::class, 'callback'])->name('callback');
-
