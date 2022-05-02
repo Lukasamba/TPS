@@ -27,19 +27,8 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                   aria-haspopup="true" aria-expanded="false">{{session()->get('userEmail')}}
-                  {{-- @if(isset($user_avatar))
-                    <img src="{{ $user_avatar }}" class="rounded-circle align-self-center mr-2" style="width: 32px;">
-                  @else --}}
-                    <i class="far fa-user-circle fa-lg rounded-circle align-self-center mr-2" style="width: 32px;"></i>
-                  {{-- @endif --}}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <h5 class="dropdown-item-text">{{ session()->get('userName') }}</h5>
-                  </li>
-                  <li>
-                    <div class="dropdown-divider"></div>
-                  </li>
                   <li>
                     <a href="/signout" class="dropdown-item">Sign Out</a>
                   </li>
