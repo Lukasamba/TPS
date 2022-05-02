@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 use App\TokenStore\TokenCache;
-use Hash;
 
 class AuthController extends Controller
 {
@@ -84,7 +83,6 @@ class AuthController extends Controller
         $tokenCache = new TokenCache();
         $tokenCache->storeTokens($accessToken, $user);
 
-        //return redirect('/');
         return redirect()->route('sync');
       }
       catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
@@ -115,8 +113,8 @@ class AuthController extends Controller
       $user = new User();
       $user->userEmail = session()->get('userEmail');
       $user->userName = session()->get('userName');
-      $user->accessToken = Hash::make(session()->get('accessToken'));
-      $user->refreshToken = Hash::make(session()->get('refreshToken'));
+      $user->accessToken = session()->get('accessToken');
+      $user->refreshToken = session()->get('refreshToken');
       $user->tokenExpires = session()->get('tokenExpires');
       $result = $user->save();
       return redirect('/');
@@ -127,8 +125,8 @@ class AuthController extends Controller
         'refreshToken', 
         'tokenExpires'])->where('userEmail', session()->get('userEmail'))->exists();
       User::where('userEmail',session()->get('userEmail'))->update([
-        'accessToken' => Hash::make(session()->get('accessToken')), 
-        'refreshToken' => Hash::make(session()->get('refreshToken')), 
+        'accessToken' => session()->get('accessToken'), 
+        'refreshToken' => session()->get('refreshToken'), 
         'tokenExpires' => session()->get('tokenExpires')]);
         return redirect('/');
     }
