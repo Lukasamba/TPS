@@ -18,7 +18,5 @@ class MainController extends Controller
         return view('projectspage');
     }
 
-    public function openCalendarPage(){
-        return view('calendarpage');
-    }
+
 }

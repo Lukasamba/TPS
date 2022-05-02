@@ -69,8 +69,11 @@ class AuthController extends Controller
         // Make the token request
         $accessToken = $oauthClient->getAccessToken('authorization_code', [
           'code' => $authCode
+
         ]);
 
+
+        // dd($accessToken);
         $graph = new Graph();
         $graph->setAccessToken($accessToken->getToken());
 
