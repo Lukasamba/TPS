@@ -26,19 +26,24 @@
             @if(session()->has('userName'))
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                  aria-haspopup="true" aria-expanded="false">
+                  aria-haspopup="true" aria-expanded="false">{{session()->get('userEmail')}}
                   {{-- @if(isset($user_avatar))
                     <img src="{{ $user_avatar }}" class="rounded-circle align-self-center mr-2" style="width: 32px;">
                   @else --}}
                     <i class="far fa-user-circle fa-lg rounded-circle align-self-center mr-2" style="width: 32px;"></i>
                   {{-- @endif --}}
                 </a>
-                <div class="dropdown-menu dropdown-menu-middle">
-                  <h5 class="dropdown-item-text mb-0">{{ session()->get('userName') }}</h5>
-                  <p class="dropdown-item-text text-muted mb-0">{{ session()->get('userEmail') }}</p>
-                  <div class="dropdown-divider"></div>
-                  <a href="/signout" class="dropdown-item">Sign Out</a>
-                </div>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <h5 class="dropdown-item-text">{{ session()->get('userName') }}</h5>
+                  </li>
+                  <li>
+                    <div class="dropdown-divider"></div>
+                  </li>
+                  <li>
+                    <a href="/signout" class="dropdown-item">Sign Out</a>
+                  </li>
+                </ul>
               </li>
             @else
               <li class="nav-item">
