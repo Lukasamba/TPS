@@ -100,7 +100,7 @@ class AuthController extends Controller
   public function signout(){
     $tokenCache = new TokenCache();
     $tokenCache->clearTokens();
-    return redirect('/');
+    return redirect()->route('welcomePage');
   }
 
   public function sync(){
@@ -128,7 +128,7 @@ class AuthController extends Controller
         'accessToken' => session()->get('accessToken'), 
         'refreshToken' => session()->get('refreshToken'), 
         'tokenExpires' => session()->get('tokenExpires')]);
-        return redirect('/');
+        return redirect()->route('HomePage');
     }
   }
 

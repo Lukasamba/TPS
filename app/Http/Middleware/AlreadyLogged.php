@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class IsLogged
+class AlreadyLogged
 {
     /**
      * Handle an incoming request.
@@ -16,11 +16,9 @@ class IsLogged
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!session()->has('accessToken')){
-            return redirect()->route('signin');
+        if(session()->has('accessToken')){
+            return redirect()->route('HomePage');
         }
-        else {
-            return $next($request);
-        }
+        return $next($request);
     }
 }
