@@ -27,16 +27,15 @@
           </ul>
           <ul class="navbar-nav ms-auto d-flex">
             @if(session()->has('userName'))
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                  aria-haspopup="true" aria-expanded="false">{{session()->get('userEmail')}}
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <a href="{{route('signout')}}" class="dropdown-item">Sign Out</a>
-                  </li>
-                </ul>
-              </li>
+
+            <li class="nav-item">
+              <a class="nav-link">{{session()->get('userEmail')}}</a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{{route('signout')}}" class="nav-link">Sign Out</a>
+            </li>
+
             @else
               <li class="nav-item">
                 <a href="{{route('signin')}}" class="nav-link">Sign In</a>
