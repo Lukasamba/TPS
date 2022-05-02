@@ -2,8 +2,6 @@
 
 @section('content')
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css" />
-
 
   <br />
   <h2 align="center"><a href="#">Jquery Fullcalandar Integration with PHP and Mysql</a></h2>

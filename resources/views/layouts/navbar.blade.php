@@ -54,7 +54,7 @@
         </div>
       </div>
     </nav>
-    <main role="main" class="container">
+    <main role="main">
         @if(session('error'))
           <div class="alert alert-danger" role="alert">
             <p class="mb-3">{{ session('error') }}</p>
