@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id('userId');
             $table->string('userEmail')->unique();
             $table->string('userName');
-            $table->string('accessToken');
-            $table->string('refreshToken');
+            $table->string('accessToken', 5000);
+            $table->string('refreshToken', 5000);
             $table->bigInteger('tokenExpires');
             $table->timestamps();
         });

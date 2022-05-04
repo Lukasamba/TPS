@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-    public function index(){
+    public function openWelcomePage(){
+        return view('welcomepage');
+    }
+
+    public function openHomePage(){
         return view('homepage');
     }
 
@@ -17,6 +21,4 @@ class MainController extends Controller
     public function openProjectsPage(){
         return view('projectspage');
     }
-
-
 }

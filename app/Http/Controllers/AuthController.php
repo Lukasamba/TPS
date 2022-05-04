@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
@@ -10,8 +11,8 @@ use App\TokenStore\TokenCache;
 
 class AuthController extends Controller
 {
-  public function signin()
-  {
+
+  public function signin(){
     // Initialize the OAuth client
     $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
       'clientId'                => config('azure.appId'),
@@ -32,8 +33,7 @@ class AuthController extends Controller
     return redirect()->away($authUrl);
   }
 
-  public function callback(Request $request)
-  {
+  public function callback(Request $request){
     // Validate state
     $expectedState = session('oauthState');
     $request->session()->forget('oauthState');
@@ -72,7 +72,6 @@ class AuthController extends Controller
 
         ]);
 
-
         // dd($accessToken);
         $graph = new Graph();
         $graph->setAccessToken($accessToken->getToken());
@@ -84,7 +83,7 @@ class AuthController extends Controller
         $tokenCache = new TokenCache();
         $tokenCache->storeTokens($accessToken, $user);
 
-        return redirect('/');
+        return redirect()->route('sync');
       }
       catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
         return redirect('/')
@@ -97,10 +96,40 @@ class AuthController extends Controller
       ->with('error', $request->query('error'))
       ->with('errorDetail', $request->query('error_description'));
   }
-  public function signout()
-{
-  $tokenCache = new TokenCache();
-  $tokenCache->clearTokens();
-  return redirect('/');
-}
+
+  public function signout(){
+    $tokenCache = new TokenCache();
+    $tokenCache->clearTokens();
+    return redirect()->route('welcomePage');
+  }
+
+  public function sync(){
+    $checker = User::select([
+      'accessToken', 
+      'refreshToken', 
+      'tokenExpires'])->where('userEmail', session()->get('userEmail'))->exists();
+
+    if(!$checker){
+      $user = new User();
+      $user->userEmail = session()->get('userEmail');
+      $user->userName = session()->get('userName');
+      $user->accessToken = session()->get('accessToken');
+      $user->refreshToken = session()->get('refreshToken');
+      $user->tokenExpires = session()->get('tokenExpires');
+      $result = $user->save();
+      return redirect('/');
+    }
+    else {
+      $checker = User::select([
+        'accessToken', 
+        'refreshToken', 
+        'tokenExpires'])->where('userEmail', session()->get('userEmail'))->exists();
+      User::where('userEmail',session()->get('userEmail'))->update([
+        'accessToken' => session()->get('accessToken'), 
+        'refreshToken' => session()->get('refreshToken'), 
+        'tokenExpires' => session()->get('tokenExpires')]);
+        return redirect()->route('HomePage');
+    }
+  }
+
 }

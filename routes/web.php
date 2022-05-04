@@ -16,13 +16,19 @@ use App\Http\Controllers\CalendarController;
 |
 */
 
-Route::get('/', [MainController::class, 'index'])->name('HomePage');
-Route::get('/teams', [MainController::class, 'openTeamsPage'])->name('TeamsPage');
-Route::get('/projects', [MainController::class, 'openProjectsPage'])->name('ProjectsPage');
-Route::get('/calendar', [CalendarController::class, 'openCalendarPage'])->name('CalendarPage');
-Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
-Route::get('/callback', [AuthController::class, 'callback'])->name('callback');
-Route::get('/signout', [AuthController::class, 'signout'])->name('signout');
-Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy');
-Route::get('/calendarDummy/new', [CalendarController::class, 'getNewEventForm'])->name('getNewEventForm');
-Route::post('/calendarDummy/new', [CalendarController::class, 'createNewEvent'])->name('createNewEvent');
+Route::get('/', [MainController::class, 'openWelcomePage'])->name('welcomePage')->middleware('AlreadyLogged');
+Route::get('/home', [MainController::class, 'openHomePage'])->name('HomePage')->middleware('IsLogged');
+
+Route::get('/teams', [MainController::class, 'openTeamsPage'])->name('TeamsPage')->middleware('IsLogged');
+Route::get('/projects', [MainController::class, 'openProjectsPage'])->name('ProjectsPage')->middleware('IsLogged');
+Route::get('/calendar', [CalendarController::class, 'openCalendarPage'])->name('CalendarPage')->middleware('IsLogged');
+
+Route::get('/signin', [AuthController::class, 'signin'])->name('signin')->middleware('AlreadyLogged');
+Route::get('/callback', [AuthController::class, 'callback'])->name('callback')->middleware('AlreadyLogged');
+Route::get('/signout', [AuthController::class, 'signout'])->name('signout')->middleware('IsLogged');
+
+Route::any('/sync', [AuthController::class, 'sync'])->name('sync')->middleware('IsLogged');
+
+Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy')->middleware('IsLogged');
+Route::get('/calendarDummy/new', [CalendarController::class, 'getNewEventForm'])->name('getNewEventForm')->middleware('IsLogged');
+Route::post('/calendarDummy/new', [CalendarController::class, 'createNewEvent'])->name('createNewEvent')->middleware('IsLogged');
