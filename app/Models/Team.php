@@ -10,10 +10,6 @@ class Team extends Model
     use HasFactory;
     
     protected $fillable = [
-        'userEmail',
-        'userName',
-        'accessToken',
-        'refreshToken',
-        'tokenExpires',
+        'teamName'
      ];
 }
