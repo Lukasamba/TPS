@@ -14,6 +14,6 @@ class User extends Model
         'userName',
         'accessToken',
         'refreshToken',
-        'tokenExpires',
+        'tokenExpires'
      ];
 }
