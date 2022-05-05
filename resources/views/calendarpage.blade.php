@@ -1,106 +1,75 @@
 @extends('layouts.navbar')
 
 @section('content')
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" />
+  <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
 
-  <br />
-  <h2 align="center"><a href="#">Jquery Fullcalandar Integration with PHP and Mysql</a></h2>
-  <br />
-  <div class="container">
+  <div id='top'>
+
+    Locales:
+    <select id='locale-selector'></select>
+</div>
    <div id="calendar"></div>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+  <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+  <script src=https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js></script>
+
+
+
   <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var initialLocaleCode = 'lt';
+    var dates = <?php echo json_encode($events); ?>;
+  var localeSelectorEl = document.getElementById('locale-selector');
+  var now = <?php echo json_encode($now); ?>;
+  var calendarEl = document.getElementById('calendar');
 
-  $(document).ready(function() {
-   var calendar = $('#calendar').fullCalendar({
-    editable:true,
-    header:{
-     left:'prev,next today',
-     center:'title',
-     right:'month,agendaWeek,agendaDay'
-    },
-    events: 'load.php',
-    selectable:true,
-    selectHelper:true,
-    select: function(start, end, allDay)
-    {
-     var title = prompt("Enter Event Title");
-     if(title)
-     {
-      var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-      var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-      $.ajax({
-       url:"insert.php",
-       type:"POST",
-       data:{title:title, start:start, end:end},
-       success:function()
-       {
-        calendar.fullCalendar('refetchEvents');
-        alert("Added Successfully");
-       }
-      })
-     }
-    },
-    editable:true,
-    eventResize:function(event)
-    {
-     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-     var title = event.title;
-     var id = event.id;
-     $.ajax({
-      url:"update.php",
-      type:"POST",
-      data:{title:title, start:start, end:end, id:id},
-      success:function(){
-       calendar.fullCalendar('refetchEvents');
-       alert('Event Update');
-      }
-     })
-    },
+  var calendar = new FullCalendar.Calendar(calendarEl, {
 
-    eventDrop:function(event)
-    {
-     var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-     var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-     var title = event.title;
-     var id = event.id;
-     $.ajax({
-      url:"update.php",
-      type:"POST",
-      data:{title:title, start:start, end:end, id:id},
-      success:function()
-      {
-       calendar.fullCalendar('refetchEvents');
-       alert("Event Updated");
-      }
-     });
+    buttonIcons: true,
+    timezone: 'Europe/Kiev',
+    navLinks: true,
+    weekNumbers: true,
+    initialView: 'timeGridWeek',
+    nowIndicator: true,
+    initialDate: now,
+    now: now,
+    dayMaxEvents: true,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth timeGridWeek timeGridDay'
     },
-
-    eventClick:function(event)
-    {
-     if(confirm("Are you sure you want to remove it?"))
-     {
-      var id = event.id;
-      $.ajax({
-       url:"delete.php",
-       type:"POST",
-       data:{id:id},
-       success:function()
-       {
-        calendar.fullCalendar('refetchEvents');
-        alert("Event Removed");
-       }
-      })
-     }
-    },
-
-   });
+    titleFormat: { // will produce something like "Tuesday, September 18, 2018"
+    month: 'long',
+    year: 'numeric',
+    day: 'numeric',
+  },
+  eventTimeFormat: { // like '14:30:00'
+    hour: '2-digit',
+    minute: '2-digit',
+    meridiem: false,
+    hour12: false
+  },
+  locale: initialLocaleCode,
+    events: dates
   });
 
+  calendar.render();
+  calendar.getAvailableLocaleCodes().forEach(function(localeCode) {
+    var optionEl = document.createElement('option');
+    optionEl.value = localeCode;
+    optionEl.selected = localeCode == initialLocaleCode;
+    optionEl.innerText = localeCode;
+    localeSelectorEl.appendChild(optionEl);
+  });
+
+  localeSelectorEl.addEventListener('change', function() {
+    if (this.value) {
+      calendar.setOption('locale', this.value);
+    }
+  });
+});
   </script>
 @endsection

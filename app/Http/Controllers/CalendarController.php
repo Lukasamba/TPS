@@ -12,22 +12,93 @@ use App\TimeZones\TimeZones;
 class CalendarController extends Controller
 {
     public function openCalendarPage(){
-        return view('calendarpage');
+        $viewData = $this->loadViewData();
+
+        $graph = $this->getGraph();
+        if (microtime(true) > session('tokenExpires')){
+            return redirect('/signin');
+        }
+        // Get user's timezone
+        $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
+        $startOfWeek = new \DateTimeImmutable('sunday -1 week', $timezone);
+        $endOfWeek = new \DateTimeImmutable('sunday +1818 day', $timezone);
+        $now = new \DateTimeImmutable('now', $timezone);
+        //dd($now);
+        $viewData['dateRange'] = $startOfWeek->format('M j, Y').' - '.$endOfWeek->format('M j, Y');
+
+    $queryParams = array(
+      'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),
+      'endDateTime' => $endOfWeek->format(\DateTimeInterface::ISO8601),
+      // Only request the properties used by the app
+      '$select' => 'subject,organizer,start,end',
+      // Sort them by start time
+      '$orderby' => 'start/dateTime'
+      // Limit results to 25
+      //'$top' => 25
+    );
+
+    // Append query parameters to the '/me/calendarView' url
+    $getEventsUrl = '/me/calendarView?'.http_build_query($queryParams);
+    //dd(microtime(true));
+    if (microtime(true) > session('tokenExpires')){
+        return redirect('/signin');
     }
+    $events = $graph->createRequest('GET', $getEventsUrl)
+      // Add the user's timezone to the Prefer header
+      ->addHeaders(array(
+        'Prefer' => 'outlook.timezone="'.$viewData['userTimeZone'].'"'
+      ))
+      ->setReturnType(Model\Event::class)
+      ->execute();
+
+
+    //dd($events);
+    $formevents = [];
+    // [
+    //     [
+    //         'title' => 'petras',
+    //         'start' => '2022-05-12',
+    //         //'end'=> '2022-05-12T12:30:00'
+    //     ],
+    //     [
+    //         'title' => 'petras2',
+    //         'start' => '2022-05-12',
+    //         //'end'=> '2022-05-12T16:30:00'
+    //     ]
+    // ];
+    foreach($events as $event) {
+        array_push($formevents, [
+            // Add the email address in the emailAddress property
+            'start' => $event->getStart()->getDateTime(),
+            'end' => $event->getEnd()->getDateTime(),
+          ]);
+    }
+
+        //dd($viewData['events']);
+        $viewData['events']=$formevents;
+        $viewData['now']=$now->format('Y-m-d\TH:i:s');
+        //return view('calendarpage')->with('timezone', $timezone->getName());
+        return view('calendarpage', $viewData);
+    }
+    //\Carbon\Carbon::parse($event->getStart()->getDateTime())->format('n/j/y g:i A')
   public function calendarDummy()
   {
     $viewData = $this->loadViewData();
 
     $graph = $this->getGraph();
-
+    if (microtime(true) > session('tokenExpires')){
+        return redirect('/signin');
+    }
     // Get user's timezone
     $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
+
 
     // Get start and end of week
     $startOfWeek = new \DateTimeImmutable('sunday -1 week', $timezone);
     $endOfWeek = new \DateTimeImmutable('sunday', $timezone);
 
-    $viewData['dateRange'] = $startOfWeek->format('M j, Y').' - '.$endOfWeek->format('M j, Y');
+    // $viewData['dateRange'] = $startOfWeek->format('M j, Y').' - '.$endOfWeek->format('M j, Y');
+    $viewData['dateRange'] = $startOfWeek->format('M j, Y');
 
     $queryParams = array(
       'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),
@@ -42,7 +113,10 @@ class CalendarController extends Controller
 
     // Append query parameters to the '/me/calendarView' url
     $getEventsUrl = '/me/calendarView?'.http_build_query($queryParams);
-
+    //dd(microtime(true));
+    if (microtime(true) > session('tokenExpires')){
+        return redirect('/signin');
+    }
     $events = $graph->createRequest('GET', $getEventsUrl)
       // Add the user's timezone to the Prefer header
       ->addHeaders(array(
@@ -50,6 +124,8 @@ class CalendarController extends Controller
       ))
       ->setReturnType(Model\Event::class)
       ->execute();
+
+
 
       $viewData['events'] = $events;
       return view('calendarDummy', $viewData);
@@ -129,7 +205,6 @@ public function createNewEvent(Request $request)
       'contentType' => 'text'
     ]
   ];
-
   // POST /me/events
   $response = $graph->createRequest('POST', '/me/events' )
     ->attachBody($newEvent)
