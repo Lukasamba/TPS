@@ -31,7 +31,7 @@ class CalendarController extends Controller
       'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),
       'endDateTime' => $endOfWeek->format(\DateTimeInterface::ISO8601),
       // Only request the properties used by the app
-      '$select' => 'subject,organizer,start,end',
+      '$select' => 'subject,organizer,start,end,location,bodyPreview',
       // Sort them by start time
       '$orderby' => 'start/dateTime'
       // Limit results to 25
@@ -52,8 +52,8 @@ class CalendarController extends Controller
       ->setReturnType(Model\Event::class)
       ->execute();
 
-    //dd(json_encode($events));
-    //dd($events);
+    // dd($events);
+
     $formevents = [];
     // [
     //     [
@@ -73,10 +73,12 @@ class CalendarController extends Controller
             'title' => $event->getSubject(),
             'start' => $event->getStart()->getDateTime(),
             'end' => $event->getEnd()->getDateTime(),
+            'location' => $event->getLocation()->getDisplayName(),
             'backgroundColor' => 'black',
+            'description' => $event->getBodyPreview(),
           ]);
     }
-
+    // dd($formevents);
         //dd($viewData['events']);
         $viewData['events']=$formevents;
         $viewData['now']=$now->format('Y-m-d\TH:i:s');
