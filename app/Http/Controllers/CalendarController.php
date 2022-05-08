@@ -23,6 +23,7 @@ class CalendarController extends Controller
         $startOfWeek = new \DateTimeImmutable('sunday -1 week', $timezone);
         $endOfWeek = new \DateTimeImmutable('sunday +1818 day', $timezone);
         $now = new \DateTimeImmutable('now', $timezone);
+        $currentMonth = new \DateTimeImmutable('now', $timezone);
         //dd($now);
         $viewData['dateRange'] = $startOfWeek->format('M j, Y').' - '.$endOfWeek->format('M j, Y');
 
@@ -51,7 +52,7 @@ class CalendarController extends Controller
       ->setReturnType(Model\Event::class)
       ->execute();
 
-
+    //dd(json_encode($events));
     //dd($events);
     $formevents = [];
     // [
@@ -69,14 +70,19 @@ class CalendarController extends Controller
     foreach($events as $event) {
         array_push($formevents, [
             // Add the email address in the emailAddress property
+            'title' => $event->getSubject(),
             'start' => $event->getStart()->getDateTime(),
             'end' => $event->getEnd()->getDateTime(),
+            'backgroundColor' => 'black',
           ]);
     }
 
         //dd($viewData['events']);
         $viewData['events']=$formevents;
         $viewData['now']=$now->format('Y-m-d\TH:i:s');
+        $viewData['currentMonth']=$currentMonth->format('Y-m');
+        $viewData['timezone']=$timezone->getName();
+
         //return view('calendarpage')->with('timezone', $timezone->getName());
         return view('calendarpage', $viewData);
     }
