@@ -224,6 +224,7 @@ class CalendarController extends Controller
 }
 public function createNewEvent(Request $request)
 {
+  dd($request->eventSubject);
   // Validate required fields
   $request->validate([
     'eventSubject' => 'nullable|string',
@@ -261,7 +262,6 @@ public function createNewEvent(Request $request)
       'type' => 'required'
     ]);
   }
-  dd($request->eventSubject);
   // Build the event
   $newEvent = [
     'subject' => $request->eventSubject,

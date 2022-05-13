@@ -6,7 +6,7 @@
 margin: 40px auto;
 padding: 0 10px;">
 <h1>Sukurti</h1>
-<form method="POST">
+<form method="POST" action="{{route('createNewEvent')}}">
   @csrf
   <div class="form-group">
     <label>Ivykio pavadinimas</label>

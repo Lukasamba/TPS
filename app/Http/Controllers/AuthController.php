@@ -117,7 +117,7 @@ class AuthController extends Controller
       $user->refreshToken = session()->get('refreshToken');
       $user->tokenExpires = session()->get('tokenExpires');
       $result = $user->save();
-      return redirect('/');
+      return redirect()->route('HomePage');
     }
     else {
       $checker = User::select([
