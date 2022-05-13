@@ -78,7 +78,8 @@ class CalendarController extends Controller
                 'location' => $event->getLocation()->getDisplayName(),
                 'description' => $event->getBodyPreview(),
                 'backgroundColor' => 'red',
-                'borderColor' => 'black',
+                'borderColor' => 'red',
+                'color' => 'red',
                 'eventType' => 'Sprint Review :',
               ]);
 
@@ -92,7 +93,8 @@ class CalendarController extends Controller
                 'location' => $event->getLocation()->getDisplayName(),
                 'description' => $event->getBodyPreview(),
                 'backgroundColor' => 'green',
-                'borderColor' => 'black',
+                'borderColor' => 'green',
+                'color' => 'green',
                 'eventType' => 'Sprint Planning :',
               ]);
 
@@ -106,7 +108,8 @@ class CalendarController extends Controller
                 'location' => $event->getLocation()->getDisplayName(),
                 'description' => $event->getBodyPreview(),
                 'backgroundColor' => 'orange',
-                'borderColor' => 'black',
+                'borderColor' => 'orange',
+                'color' => 'orange',
                 'eventType' => 'Retrospektyva :',
               ]);
 
@@ -120,7 +123,8 @@ class CalendarController extends Controller
                 'location' => $event->getLocation()->getDisplayName(),
                 'description' => $event->getBodyPreview(),
                 'backgroundColor' => 'yellow',
-                'borderColor' => 'black',
+                'borderColor' => 'yellow',
+                'color' => 'yellow',
                 'eventType' => 'Stand-Up :',
               ]);
 
@@ -134,6 +138,7 @@ class CalendarController extends Controller
                 'location' => $event->getLocation()->getDisplayName(),
                 'description' => $event->getBodyPreview(),
                 'borderColor' => 'black',
+
                 'eventType' => 'Simple Event :',
               ]);
 
