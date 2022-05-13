@@ -31,7 +31,7 @@ class CalendarController extends Controller
       'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),
       'endDateTime' => $endOfWeek->format(\DateTimeInterface::ISO8601),
       // Only request the properties used by the app
-      '$select' => 'subject,organizer,start,end,location,bodyPreview',
+      '$select' => 'subject,organizer,start,end,location,bodyPreview,categories',
       // Sort them by start time
       '$orderby' => 'start/dateTime'
       // Limit results to 25
@@ -67,17 +67,83 @@ class CalendarController extends Controller
     //         //'end'=> '2022-05-12T16:30:00'
     //     ]
     // ];
+
     foreach($events as $event) {
-        array_push($formevents, [
-            // Add the email address in the emailAddress property
-            'title' => $event->getSubject(),
-            'start' => $event->getStart()->getDateTime(),
-            'end' => $event->getEnd()->getDateTime(),
-            'location' => $event->getLocation()->getDisplayName(),
-            'backgroundColor' => 'black',
-            'description' => $event->getBodyPreview(),
-          ]);
+        if ($event->getCategories()[0] == 'Red category'){
+            array_push($formevents, [
+                // Add the email address in the emailAddress property
+                'title' => $event->getSubject(),
+                'start' => $event->getStart()->getDateTime(),
+                'end' => $event->getEnd()->getDateTime(),
+                'location' => $event->getLocation()->getDisplayName(),
+                'description' => $event->getBodyPreview(),
+                'backgroundColor' => 'red',
+                'borderColor' => 'black',
+                'eventType' => 'Sprint Review :',
+              ]);
+
+        }
+        elseif ($event->getCategories()[0] == 'Green category'){
+            array_push($formevents, [
+                // Add the email address in the emailAddress property
+                'title' => $event->getSubject(),
+                'start' => $event->getStart()->getDateTime(),
+                'end' => $event->getEnd()->getDateTime(),
+                'location' => $event->getLocation()->getDisplayName(),
+                'description' => $event->getBodyPreview(),
+                'backgroundColor' => 'green',
+                'borderColor' => 'black',
+                'eventType' => 'Sprint Planning :',
+              ]);
+
+        }
+        elseif ($event->getCategories()[0] == 'Orange category'){
+            array_push($formevents, [
+                // Add the email address in the emailAddress property
+                'title' => $event->getSubject(),
+                'start' => $event->getStart()->getDateTime(),
+                'end' => $event->getEnd()->getDateTime(),
+                'location' => $event->getLocation()->getDisplayName(),
+                'description' => $event->getBodyPreview(),
+                'backgroundColor' => 'orange',
+                'borderColor' => 'black',
+                'eventType' => 'Retrospektyva :',
+              ]);
+
+        }
+        elseif ($event->getCategories()[0] == 'Yellow category'){
+            array_push($formevents, [
+                // Add the email address in the emailAddress property
+                'title' => $event->getSubject(),
+                'start' => $event->getStart()->getDateTime(),
+                'end' => $event->getEnd()->getDateTime(),
+                'location' => $event->getLocation()->getDisplayName(),
+                'description' => $event->getBodyPreview(),
+                'backgroundColor' => 'yellow',
+                'borderColor' => 'black',
+                'eventType' => 'Stand-Up :',
+              ]);
+
+        }
+        else {
+            array_push($formevents, [
+                // Add the email address in the emailAddress property
+                'title' => $event->getSubject(),
+                'start' => $event->getStart()->getDateTime(),
+                'end' => $event->getEnd()->getDateTime(),
+                'location' => $event->getLocation()->getDisplayName(),
+                'description' => $event->getBodyPreview(),
+                'borderColor' => 'black',
+                'eventType' => 'Simple Event :',
+              ]);
+
+        }
     }
+    // foreach($formevents as $event){
+
+    //     dd($event);
+    // }
+
     // dd($formevents);
         //dd($viewData['events']);
         $viewData['events']=$formevents;
@@ -195,7 +261,7 @@ public function createNewEvent(Request $request)
       'type' => 'required'
     ]);
   }
-
+  dd($request->eventSubject);
   // Build the event
   $newEvent = [
     'subject' => $request->eventSubject,
@@ -219,7 +285,7 @@ public function createNewEvent(Request $request)
     ->setReturnType(Model\Event::class)
     ->execute();
 
-  return redirect('/calendarDummy')->with('wtf', session('accessToken'));
+  return redirect('/calendarpage')->with('wtf', session('accessToken'));
 }
 }
 

@@ -9,7 +9,15 @@
     Locales:
     <select id='locale-selector'></select>
 </div>
-<div id='calendar'></div>
+<div style="max-width: 1100px;
+margin: 40px auto;
+padding: 0 10px;">
+<a class="btn btn-primary" href=/calendar/new>Sukurti</a>
+</div>
+<div id='calendar'>
+
+
+</div>
 
 <!-- Modal -->
 
@@ -27,6 +35,7 @@
             <p id="description"></p>
           </div>
           <div class="modal-footer">
+            <p id="eventType"></p>
             <p id="location">
           </div>
         </div>
@@ -228,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('#monthDayWeekDay').text(stringTemps);
                 //$('#time').text(timeInterval);
                 $('#location').text(arg.event.extendedProps.location);
+                $('#eventType').text(arg.event.extendedProps.eventType);
                 $('#description').text(arg.event.extendedProps.description);
                 $('#calendarModal').modal();
             },
