@@ -32,3 +32,6 @@ Route::any('/sync', [AuthController::class, 'sync'])->name('sync')->middleware('
 Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy')->middleware('IsLogged');
 Route::get('/calendar/new', [CalendarController::class, 'getNewEventForm'])->name('getNewEventForm')->middleware('IsLogged');
 Route::post('/calendar/new', [CalendarController::class, 'createNewEvent'])->name('createNewEvent')->middleware('IsLogged');
+Route::get('/calendar/edit', [CalendarController::class, 'editEventForm'])->name('editEventForm')->middleware('IsLogged');
+Route::post('/calendar/edit', [CalendarController::class, 'initEditEvent'])->name('initEditEvent')->middleware('IsLogged');
+Route::post('/calendar/delete', [CalendarController::class, 'deleteEvent'])->name('deleteEvent')->middleware('IsLogged');

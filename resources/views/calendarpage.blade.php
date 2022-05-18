@@ -35,6 +35,35 @@ padding: 0 10px;">
             <p id="description"></p>
           </div>
           <div class="modal-footer">
+            <a class="btn btn-primary" href=/calendar/edit>Redaguoti</a>
+            <form method="POST" action="{{route('deleteEvent')}}">
+                @csrf
+                <input type="hidden" class="form-control" id="eventId" name="eventId" />
+                <input type="submit" class="btn btn-primary mr-2" value="Delete" />
+            </form>
+            <p id="eventType"></p>
+            <p id="location">
+          </div>
+        </div>
+      </div>
+</div>
+<div id="editModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="title"></h5>
+          </div>
+          <div class="modal-body">
+            <p id="monthDayWeekDay"></p>
+            <hr>Aprasymas:
+            <p id="description"></p>
+          </div>
+          <div class="modal-footer">
+            {{-- <form method="POST" action="{{route('deleteEvent')}}">
+                @csrf
+                <input type="hidden" class="form-control" id="eventId" name="eventId" />
+                <input type="submit" class="btn btn-primary mr-2" value="Delete" />
+            </form> --}}
             <p id="eventType"></p>
             <p id="location">
           </div>
@@ -239,6 +268,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('#location').text(arg.event.extendedProps.location);
                 $('#eventType').text(arg.event.extendedProps.eventType);
                 $('#description').text(arg.event.extendedProps.description);
+                $('#eventId').text(arg.event.extendedProps.eventId);
+                document.getElementById("eventId").value=(arg.event.extendedProps.eventId);
                 $('#calendarModal').modal();
             },
     editable: true,

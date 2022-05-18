@@ -31,11 +31,11 @@ class CalendarController extends Controller
       'startDateTime' => $startOfWeek->format(\DateTimeInterface::ISO8601),
       'endDateTime' => $endOfWeek->format(\DateTimeInterface::ISO8601),
       // Only request the properties used by the app
-      '$select' => 'subject,organizer,start,end,location,bodyPreview,categories',
+      '$select' => 'subject,organizer,start,end,location,bodyPreview,categories,id',
       // Sort them by start time
-      '$orderby' => 'start/dateTime'
+      '$orderby' => 'start/dateTime',
       // Limit results to 25
-      //'$top' => 25
+      '$top' => 100
     );
 
     // Append query parameters to the '/me/calendarView' url
@@ -67,8 +67,10 @@ class CalendarController extends Controller
     //         //'end'=> '2022-05-12T16:30:00'
     //     ]
     // ];
+        // dd($events);
 
     foreach($events as $event) {
+        if (count($event->getCategories())){
         if ($event->getCategories()[0] == 'Red category'){
             array_push($formevents, [
                 // Add the email address in the emailAddress property
@@ -81,7 +83,9 @@ class CalendarController extends Controller
                 'borderColor' => 'red',
                 'color' => 'red',
                 'eventType' => 'Sprint Review :',
+                'eventId' => $event->getId(),
               ]);
+
 
         }
         elseif ($event->getCategories()[0] == 'Green category'){
@@ -96,6 +100,7 @@ class CalendarController extends Controller
                 'borderColor' => 'green',
                 'color' => 'green',
                 'eventType' => 'Sprint Planning :',
+                'eventId' => $event->getId(),
               ]);
 
         }
@@ -111,6 +116,7 @@ class CalendarController extends Controller
                 'borderColor' => 'orange',
                 'color' => 'orange',
                 'eventType' => 'Retrospektyva :',
+                'eventId' => $event->getId(),
               ]);
 
         }
@@ -126,23 +132,25 @@ class CalendarController extends Controller
                 'borderColor' => 'yellow',
                 'color' => 'yellow',
                 'eventType' => 'Stand-Up :',
+                'eventId' => $event->getId(),
               ]);
 
         }
-        else {
-            array_push($formevents, [
-                // Add the email address in the emailAddress property
-                'title' => $event->getSubject(),
-                'start' => $event->getStart()->getDateTime(),
-                'end' => $event->getEnd()->getDateTime(),
-                'location' => $event->getLocation()->getDisplayName(),
-                'description' => $event->getBodyPreview(),
-                'borderColor' => 'black',
+    }
+    else {
+        array_push($formevents, [
+            // Add the email address in the emailAddress property
+            'title' => $event->getSubject(),
+            'start' => $event->getStart()->getDateTime(),
+            'end' => $event->getEnd()->getDateTime(),
+            'location' => $event->getLocation()->getDisplayName(),
+            'description' => $event->getBodyPreview(),
+            'borderColor' => 'black',
 
-                'eventType' => 'Simple Event :',
-              ]);
-
-        }
+            'eventType' => 'Simple Event',
+            'eventId' => $event->getId(),
+          ]);
+    }
     }
     // foreach($formevents as $event){
 
@@ -229,15 +237,15 @@ class CalendarController extends Controller
 }
 public function createNewEvent(Request $request)
 {
-  dd($request->eventSubject);
+//   dd($request->eventSubject);
   // Validate required fields
-  $request->validate([
-    'eventSubject' => 'nullable|string',
-    'eventAttendees' => 'nullable|string',
-    'eventStart' => 'required|date',
-    'eventEnd' => 'required|date',
-    'eventBody' => 'nullable|string'
-  ]);
+//   $request->validate([
+//     'eventSubject' => 'nullable|string',
+//     'eventAttendees' => 'nullable|string',
+//     'eventStart' => 'required|date',
+//     'eventEnd' => 'required|date',
+//     'eventBody' => 'nullable|string'
+//   ]);
 
   $viewData = $this->loadViewData();
 
@@ -256,27 +264,30 @@ public function createNewEvent(Request $request)
 //        $attendeeAddress);
 //   }
   $attendees = [];
-  foreach($attendeeAddresses as $attendeeAddress)
-  {
-    array_push($attendees, [
-      // Add the email address in the emailAddress property
-      'emailAddress' => [
-        'address' => $attendeeAddress
-      ],
-      // Set the attendee type to required
-      'type' => 'required'
-    ]);
-  }
+//   foreach($attendeeAddresses as $attendeeAddress)
+//   {
+//     array_push($attendees, [
+//       // Add the email address in the emailAddress property
+//       'emailAddress' => [
+//         'address' => $attendeeAddress
+//       ],
+//       // Set the attendee type to required
+//       'type' => 'required'
+//     ]);
+//   }
+    $EndTimeStart = $request->eventDay . "T" . $request->timeStart;
+    $EndTimeDate = $request->eventDay . "T" . $request->timeEnd;
+    // dd($request->eventSubject, $request->eventDay, $request->timeStart, $request->timeEnd, $request->eventBody, $EndTimeDate);
   // Build the event
   $newEvent = [
     'subject' => $request->eventSubject,
     'attendees' => $attendees,
     'start' => [
-      'dateTime' => $request->eventStart,
+      'dateTime' => $EndTimeStart,
       'timeZone' => $viewData['userTimeZone']
     ],
     'end' => [
-      'dateTime' => $request->eventEnd,
+      'dateTime' => $EndTimeDate,
       'timeZone' => $viewData['userTimeZone']
     ],
     'body' => [
@@ -289,8 +300,97 @@ public function createNewEvent(Request $request)
     ->attachBody($newEvent)
     ->setReturnType(Model\Event::class)
     ->execute();
+//   dd($response);
+  return redirect('/calendar')->with('wtf', session('accessToken'));
+}
+public function deleteEvent(Request $request)
+{
 
-  return redirect('/calendarpage')->with('wtf', session('accessToken'));
+  $viewData = $this->loadViewData();
+
+  $graph = $this->getGraph();
+//   dd($request->eventId);
+
+
+  $response = $graph->createRequest('DELETE', '/me/events/' .  $request->eventId)
+    ->setReturnType(Model\Event::class)
+    ->execute();
+//   dd($response);
+  return redirect('/calendar')->with('wtf', session('accessToken'));
+}
+public function editEventForm()
+{
+  $viewData = $this->loadViewData();
+
+  return view('editevent', $viewData);
+}
+public function initEditEvent(Request $request)
+{
+//   dd($request->eventSubject);
+  // Validate required fields
+//   $request->validate([
+//     'eventSubject' => 'nullable|string',
+//     'eventAttendees' => 'nullable|string',
+//     'eventStart' => 'required|date',
+//     'eventEnd' => 'required|date',
+//     'eventBody' => 'nullable|string'
+//   ]);
+
+  $viewData = $this->loadViewData();
+
+  $graph = $this->getGraph();
+
+  // Attendees from form are a semi-colon delimited list of
+  // email addresses
+  $attendeeAddresses = explode(';', $request->eventAttendees);
+
+  // The Attendee object in Graph is complex, so build the structure
+//   $attendees = [];
+//   foreach($attendeeAddresses as $attendeeAddress)
+//   {
+//     array_push($attendees,
+//       // Add the email address in the emailAddress property
+//        $attendeeAddress);
+//   }
+  $attendees = [];
+//   foreach($attendeeAddresses as $attendeeAddress)
+//   {
+//     array_push($attendees, [
+//       // Add the email address in the emailAddress property
+//       'emailAddress' => [
+//         'address' => $attendeeAddress
+//       ],
+//       // Set the attendee type to required
+//       'type' => 'required'
+//     ]);
+//   }
+    $EndTimeStart = $request->eventDay . "T" . $request->timeStart;
+    $EndTimeDate = $request->eventDay . "T" . $request->timeEnd;
+    // dd($request->eventSubject, $request->eventDay, $request->timeStart, $request->timeEnd, $request->eventBody, $EndTimeDate);
+  // Build the event
+  $newEvent = [
+    'subject' => $request->eventSubject,
+    'attendees' => $attendees,
+    'start' => [
+      'dateTime' => $EndTimeStart,
+      'timeZone' => $viewData['userTimeZone']
+    ],
+    'end' => [
+      'dateTime' => $EndTimeDate,
+      'timeZone' => $viewData['userTimeZone']
+    ],
+    'body' => [
+      'content' => $request->eventBody,
+      'contentType' => 'text'
+    ]
+  ];
+  // POST /me/events
+  $response = $graph->createRequest('POST', '/me/events' )
+    ->attachBody($newEvent)
+    ->setReturnType(Model\Event::class)
+    ->execute();
+//   dd($response);
+  return redirect('/calendar')->with('wtf', session('accessToken'));
 }
 }
 

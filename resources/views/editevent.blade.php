@@ -5,8 +5,8 @@
 <div style="max-width: 1100px;
 margin: 40px auto;
 padding: 0 10px;">
-<h1>Sukurti</h1>
-<form method="POST" action="{{route('createNewEvent')}}">
+<h1>Redaguoti</h1>
+<form method="POST" action="{{route('initEditEvent')}}">
   @csrf
   <div class="form-group">
     <label>Ivykio pavadinimas</label>
