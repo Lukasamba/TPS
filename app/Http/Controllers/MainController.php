@@ -14,10 +14,6 @@ class MainController extends Controller
         return view('homepage');
     }
 
-    public function openTeamsPage(){
-        return view('teamspage');
-    }
-
     public function openProjectsPage(){
         return view('projectspage');
     }
