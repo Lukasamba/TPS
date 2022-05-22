@@ -36,4 +36,3 @@ Route::get('/calendar/newTest', [CalendarController::class, 'getNewEventFormTest
 Route::post('/calendar/newTest', [CalendarController::class, 'createNewEventTest'])->name('createNewEventTest')->middleware('IsLogged');
 Route::post('/calendar/edit', [CalendarController::class, 'editEventForm'])->name('editEventForm')->middleware('IsLogged');
 Route::post('/calendar/editinit', [CalendarController::class, 'initEditEvent'])->name('initEditEvent')->middleware('IsLogged');
-Route::post('/calendar/delete', [CalendarController::class, 'deleteEvent'])->name('deleteEvent')->middleware('IsLogged');
