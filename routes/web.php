@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalendarController;
-use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +20,7 @@ Route::get('/', [MainController::class, 'openWelcomePage'])->name('welcomePage')
 Route::get('/home', [MainController::class, 'openHomePage'])->name('HomePage')->middleware('IsLogged');
 
 Route::get('/teams', [MainController::class, 'openTeamsPage'])->name('TeamsPage')->middleware('IsLogged');
-Route::get('/projects', [ProjectController::class, 'openProjectsPage'])->name('ProjectsPage')->middleware('IsLogged');
+Route::get('/projects', [MainController::class, 'openProjectsPage'])->name('ProjectsPage')->middleware('IsLogged');
 Route::get('/calendar', [CalendarController::class, 'openCalendarPage'])->name('CalendarPage')->middleware('IsLogged');
 
 Route::get('/signin', [AuthController::class, 'signin'])->name('signin')->middleware('AlreadyLogged');
@@ -33,3 +32,11 @@ Route::any('/sync', [AuthController::class, 'sync'])->name('sync')->middleware('
 Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy')->middleware('IsLogged');
 Route::get('/calendar/new', [CalendarController::class, 'getNewEventForm'])->name('getNewEventForm')->middleware('IsLogged');
 Route::post('/calendar/new', [CalendarController::class, 'createNewEvent'])->name('createNewEvent')->middleware('IsLogged');
+Route::get('/calendar/edit', [CalendarController::class, 'editEventForm'])->name('editEventForm')->middleware('IsLogged');
+Route::post('/calendar/edit', [CalendarController::class, 'initEditEvent'])->name('initEditEvent')->middleware('IsLogged');
+Route::post('/calendar/delete', [CalendarController::class, 'deleteEvent'])->name('deleteEvent')->middleware('IsLogged');
+
+Route::get('/projects/new', [ProjectController::class, 'getNewProjectForm'])->name('getNewProjectForm')->middleware('IsLogged');
+//Route::post('/projects/new', [ProjectController::class, 'createNewProject'])->name('createNewProject')->middleware('IsLogged');
+Route::get('showProject/{id}',[ProjectController::class, 'showProject'])->name('showProject')->middleware('IsLogged');
+Route::post('/saveProject',[ProjectController::class, 'insertProject', 'getTeamNames'])->name('insertProject')->middleware('IsLogged');
