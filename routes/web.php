@@ -33,3 +33,8 @@ Route::any('/sync', [AuthController::class, 'sync'])->name('sync')->middleware('
 Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy')->middleware('IsLogged');
 Route::get('/calendar/new', [CalendarController::class, 'getNewEventForm'])->name('getNewEventForm')->middleware('IsLogged');
 Route::post('/calendar/new', [CalendarController::class, 'createNewEvent'])->name('createNewEvent')->middleware('IsLogged');
+
+Route::get('/projects/new', [ProjectController::class, 'getNewProjectForm'])->name('getNewProjectForm')->middleware('IsLogged');
+//Route::post('/projects/new', [ProjectController::class, 'createNewProject'])->name('createNewProject')->middleware('IsLogged');
+Route::get('showProject/{id}',[ProjectController::class, 'showProject'])->name('showProject')->middleware('IsLogged');
+Route::post('/saveProject',[ProjectController::class, 'insertProject', 'getTeamNames'])->name('insertProject')->middleware('IsLogged');
