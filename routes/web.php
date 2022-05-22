@@ -28,11 +28,3 @@ Route::get('/callback', [AuthController::class, 'callback'])->name('callback')->
 Route::get('/signout', [AuthController::class, 'signout'])->name('signout')->middleware('IsLogged');
 
 Route::any('/sync', [AuthController::class, 'sync'])->name('sync')->middleware('IsLogged');
-
-Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy')->middleware('IsLogged');
-Route::get('/calendar/new', [CalendarController::class, 'getNewEventForm'])->name('getNewEventForm')->middleware('IsLogged');
-Route::post('/calendar/new', [CalendarController::class, 'createNewEvent'])->name('createNewEvent')->middleware('IsLogged');
-Route::get('/calendar/newTest', [CalendarController::class, 'getNewEventFormTest'])->name('getNewEventFormTest')->middleware('IsLogged');
-Route::post('/calendar/newTest', [CalendarController::class, 'createNewEventTest'])->name('createNewEventTest')->middleware('IsLogged');
-Route::post('/calendar/edit', [CalendarController::class, 'editEventForm'])->name('editEventForm')->middleware('IsLogged');
-Route::post('/calendar/editinit', [CalendarController::class, 'initEditEvent'])->name('initEditEvent')->middleware('IsLogged');
