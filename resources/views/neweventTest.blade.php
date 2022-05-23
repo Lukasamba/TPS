@@ -6,11 +6,15 @@
 margin: 40px auto;
 padding: 0 10px;">
 <h1>Sukurti</h1>
-<form method="POST" action="{{route('createNewEvent')}}">
+<form method="POST" action="{{route('createNewEventTest')}}">
   @csrf
   <div class="form-group">
     <label>Ivykio pavadinimas</label>
     <input type="text" class="form-control" name="eventSubject" />
+  </div>
+  <div class="form-group">
+    <label>Dalyvis</label>
+    <input type="text" class="form-control" name="Atendee" />
   </div>
   <div class="row">
     <div class="col-sm">

@@ -36,17 +36,16 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{route('signout')}}" class="nav-link">Sign Out</a>
+                        <a href="{{route('signout')}}" class="nav-link">Atsijungti</a>
                     </li>
 
                     @else
                     <li class="nav-item">
-                        <a href="{{route('signin')}}" class="nav-link">Sign In</a>
+                        <a href="{{route('signin')}}" class="nav-link">Prisijungti</a>
                     </li>
                     @endif
                 </ul>
             </div>
-        </div>
     </nav>
     <main role="main">
         @if(session('error'))

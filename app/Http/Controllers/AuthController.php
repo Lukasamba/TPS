@@ -105,8 +105,8 @@ class AuthController extends Controller
 
   public function sync(){
     $checker = User::select([
-      'accessToken', 
-      'refreshToken', 
+      'accessToken',
+      'refreshToken',
       'tokenExpires'])->where('userEmail', session()->get('userEmail'))->exists();
 
     if(!$checker){
@@ -117,19 +117,20 @@ class AuthController extends Controller
       $user->refreshToken = session()->get('refreshToken');
       $user->tokenExpires = session()->get('tokenExpires');
       $result = $user->save();
-      return redirect('/');
+      return redirect()->route('HomePage');
     }
     else {
       $checker = User::select([
-        'accessToken', 
-        'refreshToken', 
+        'accessToken',
+        'refreshToken',
         'tokenExpires'])->where('userEmail', session()->get('userEmail'))->exists();
       User::where('userEmail',session()->get('userEmail'))->update([
-        'accessToken' => session()->get('accessToken'), 
-        'refreshToken' => session()->get('refreshToken'), 
+        'accessToken' => session()->get('accessToken'),
+        'refreshToken' => session()->get('refreshToken'),
         'tokenExpires' => session()->get('tokenExpires')]);
         return redirect()->route('HomePage');
     }
   }
+
 
 }

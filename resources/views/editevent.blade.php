@@ -5,18 +5,19 @@
 <div style="max-width: 1100px;
 margin: 40px auto;
 padding: 0 10px;">
-<h1>Sukurti</h1>
-<form method="POST" action="{{route('createNewEvent')}}">
+<h1>Redaguoti</h1>
+<form method="POST" action="{{route('initEditEvent')}}">
   @csrf
   <div class="form-group">
     <label>Ivykio pavadinimas</label>
-    <input type="text" class="form-control" name="eventSubject" />
+  <input type="hidden" class="form-control" name="eventId" value="{{$eId}}"/>
+    <input type="text" class="form-control" name="eventSubject" value="{{$ttl}}"/>
   </div>
   <div class="row">
     <div class="col-sm">
       <div class="form-group">
         <label>Diena</label>
-        <input type="date" class="form-control" id="txtDate" name="eventDay" id="eventDay"/>
+        <input type="date" class="form-control" id="txtDate" name="eventDay" id="eventDay" value="{{$eDay}}"/>
       </div>
       @error('eventDay')
         <div class="alert alert-danger">{{ $message }}</div>
@@ -25,7 +26,7 @@ padding: 0 10px;">
     <div class="col-sm">
       <div class="form-group">
         <label>Pradzia</label>
-        <input type="time" class="form-control" name="timeStart" id="timeStart" min="08:00" max="19:00"/>
+        <input type="time" class="form-control" name="timeStart" id="timeStart" min="08:00" max="19:00" value="{{$eStart}}"/>
       </div>
       @error('timeStart')
         <div class="alert alert-danger">{{ $message }}</div>
@@ -34,7 +35,7 @@ padding: 0 10px;">
   <div class="col-sm">
     <div class="form-group">
       <label>Pabaiga</label>
-      <input type="time" class="form-control" name="timeEnd" id="timeEnd" min="08:00" max="19:00"/>
+      <input type="time" class="form-control" name="timeEnd" id="timeEnd" min="08:00" max="19:00" value="{{$eEnd}}"/>
     </div>
     @error('timeEnd')
       <div class="alert alert-danger">{{ $message }}</div>
@@ -45,9 +46,9 @@ padding: 0 10px;">
 
   <div class="form-group">
     <label>Aprasas</label>
-    <textarea type="text" class="form-control" name="eventBody" rows="3"></textarea>
+    <textarea type="text" class="form-control" name="eventBody" rows="3" >{{$dsc}}</textarea>
   </div>
-  <input type="submit" class="btn btn-primary mr-2" value="Sukurti" />
+  <input type="submit" class="btn btn-primary mr-2" value="Redaguoti" />
   <a class="btn btn-secondary" href=/calendar>Atsaukti</a>
 </form>
 </div>

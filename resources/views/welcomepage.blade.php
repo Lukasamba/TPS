@@ -12,9 +12,9 @@
           <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
             <div class="card border-0 shadow rounded-3 my-5">
               <div class="card-body p-4 p-sm-5">
-                <h5 class="card-title text-center mb-5 fw-light fs-5">Welcome back!</h5>
+                <h5 class="card-title text-center mb-5 fw-light fs-5">Sveiki Sugrize!</h5>
                   <div class="d-grid mb-3">
-                    <a class="btn btn-primary btn-login fw-bold" href="{{route('HomePage')}}" >Sign in</a>
+                    <a class="btn btn-primary btn-login fw-bold" href="{{route('HomePage')}}" >Prisijungti</a>
                   </div>
               </div>
             </div>

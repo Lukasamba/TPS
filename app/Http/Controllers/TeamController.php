@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\VarDumper\VarDumper;
 
 class TeamController extends Controller
 {
@@ -36,71 +37,26 @@ class TeamController extends Controller
         //$members = Member
     }
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'teamName' => 'required',
-    //     ]);
-    //     $team = new Team;
-    //     $team->teamName = $request->teamName;
-    //     $team->save();
-    //     return redirect()->route('teams.index')
-    //         ->with('success', 'Komanda buvo sukurta sėkmingai.');
-    // }
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Team  $team
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show(Team $company)
-    // {
-    //     return view('Teams.show', compact('team'));
-    // }
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  \App\Team  $Team
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit(Team $team)
-    // {
-    //     return view('Teams.edit', compact('team'));
-    // }
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  \App\Team  $team
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'teamName' => 'required',
-    //     ]);
-    //     $team = Team::find($id);
-    //     $team->teamName = $request->teamName;
-    //     $team->save();
-    //     return redirect()->route('teams.index')
-    //         ->with('success', 'Komanda buvo atnaujinta sėkmingai');
-    // }
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  \App\Team  $company
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy(Team $team)
-    // {
-    //     $team->delete();
-    //     return redirect()->route('teams.index')
-    //         ->with('success', 'Komanda buvo ištrinta sėkminigai');
-    // }
+    public function insertTeam(Request $request)
+    {
+        $team = new Team;
+        $team->teamName = $request->input('teamName');
+        $teamId = DB::table('teams')->insertGetId([
+            'teamName' => $team->teamName,
+        ]);
+
+        // Nedekit kablelio susimyldami, gale jeigu neirasysit daugiau vardu
+        $users = $request->input('query');
+        $users = explode(", ", $users);
+        foreach ($users as $user) {
+            $dbuser = DB::table('users')->where('userName', $user)->first()->userId;
+
+            DB::table('team_members')->insert([
+                'fk_teamId' => $teamId,
+                'fk_userId' => $dbuser
+            ]);
+        }
+
+        return redirect('teams');
+    }
 }

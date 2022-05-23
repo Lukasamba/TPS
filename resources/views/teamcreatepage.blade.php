@@ -66,20 +66,23 @@
     <br>
     <div class="main">
         <h1>Sukurti komandą</h1>
-        <div>
-            <h4>Komandos pavadinimas</h4>
-        </div>
-        <input type="text" id="name" name="teamName" placeholder="Pavadinimas">
-        <div>
-            <br>
-            <h4>Įrašyti narius</h4>
-        </div>
-        <div class="ui-widget">
-            <input type="search" name="query" id="names" placeholder="Vardenis Pavardenis, ...">
-        </div>
-        <br>
-        <button> Sukurti </button>
+        <form action="{{ url('save-team') }}" method="POST">
+            @csrf
 
+            <div>
+                <h4>Komandos pavadinimas</h4>
+            </div>
+            <input type="text" id="name" name="teamName" placeholder="Pavadinimas">
+            <div>
+                <br>
+                <h4>Įrašyti narius</h4>
+            </div>
+            <div class="ui-widget">
+                <input type="search" name="query" id="names" placeholder="Vardenis Pavardenis, ...">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Sukurti</button>
+        </form>
     </div>
     <br>
 

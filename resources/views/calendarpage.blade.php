@@ -9,7 +9,16 @@
     Locales:
     <select id='locale-selector'></select>
 </div>
-<div id='calendar'></div>
+<div style="max-width: 1100px;
+margin: 40px auto;
+padding: 0 10px;">
+<a class="btn btn-primary" href=/calendar/new>Sukurti</a>
+<a class="btn btn-primary" href=/calendar/newTest>Sukurti Keliems Useriams (Test)</a>
+</div>
+<div id='calendar'>
+
+
+</div>
 
 <!-- Modal -->
 
@@ -27,6 +36,45 @@
             <p id="description"></p>
           </div>
           <div class="modal-footer">
+            <form method="POST" action="{{route('editEventForm')}}">
+                @csrf
+                <input type="hidden" class="form-control" id="eventDay" name="eventDay" />
+                <input type="hidden" class="form-control" id="eventId" name="eventId" />
+                <input type="hidden" class="form-control" id="eventStart" name="eventStart" />
+                <input type="hidden" class="form-control" id="eventEnd" name="eventEnd" />
+                <input type="hidden" class="form-control" id="descriptions" name="description" />
+                <input type="hidden" class="form-control" id="titles" name="title" />
+                <input type="submit" class="btn btn-primary mr-2" value="Redaguoti" />
+            </form>
+            <form method="POST" action="{{route('deleteEvent')}}">
+                @csrf
+                <input type="hidden" class="form-control" id="eventIddelete" name="eventIddelete" />
+                <input type="submit" class="btn btn-primary mr-2" value="Trinti" />
+            </form>
+            <p id="eventType"></p>
+            <p id="location">
+          </div>
+        </div>
+      </div>
+</div>
+<div id="editModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="title"></h5>
+          </div>
+          <div class="modal-body">
+            <p id="monthDayWeekDay"></p>
+            <hr>Aprasymas:
+            <p id="description"></p>
+          </div>
+          <div class="modal-footer">
+            {{-- <form method="POST" action="{{route('deleteEvent')}}">
+                @csrf
+                <input type="hidden" class="form-control" id="eventId" name="eventId" />
+                <input type="submit" class="btn btn-primary mr-2" value="Delete" />
+            </form> --}}
+            <p id="eventType"></p>
             <p id="location">
           </div>
         </div>
@@ -228,7 +276,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('#monthDayWeekDay').text(stringTemps);
                 //$('#time').text(timeInterval);
                 $('#location').text(arg.event.extendedProps.location);
+                document.getElementById("eventDay").value=(temporary.format('YYYY-MM-DD'));
+                document.getElementById("eventStart").value=(temporary.format('HH:mm:ss'));
+                document.getElementById("eventEnd").value=(temporaryEnd.format('HH:mm:ss'));
+                document.getElementById("eventId").value=(arg.event.extendedProps.eventId);
+                document.getElementById("eventIddelete").value=(arg.event.extendedProps.eventId);
+                document.getElementById("descriptions").value=(arg.event.extendedProps.description);
+                document.getElementById("titles").value=(arg.event.title);
+                $('#eventType').text(arg.event.extendedProps.eventType);
                 $('#description').text(arg.event.extendedProps.description);
+                $('#eventId').text(arg.event.extendedProps.eventId);
                 $('#calendarModal').modal();
             },
     editable: true,

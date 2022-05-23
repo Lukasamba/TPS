@@ -33,4 +33,14 @@ class TokenCache {
 
     return session('accessToken');
   }
+  public function getExpires() {
+    // Check if tokens exist
+    if (empty(session('accessToken')) ||
+        empty(session('refreshToken')) ||
+        empty(session('tokenExpires'))) {
+      return '';
+    }
+
+    return session('tokenExpires');
+  }
 }
