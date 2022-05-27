@@ -6,7 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProjectController;
-
+use App\Http\Controllers\EventGeneratingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,6 +35,12 @@ Route::get('/callback', [AuthController::class, 'callback'])->name('callback')->
 Route::get('/signout', [AuthController::class, 'signout'])->name('signout')->middleware('IsLogged');
 
 Route::any('/sync', [AuthController::class, 'sync'])->name('sync')->middleware('IsLogged');
+Route::get('/eventGenerate', [EventGeneratingController::class, 'openGeneratingPage'])->name('GenerateEvent')->middleware('IsLogged');
+
+Route::get('/eventGenerate/single', [EventGeneratingController::class, 'getGenerateEventForm'])->name('getGenerateEventForm')->middleware('IsLogged');
+Route::post('/eventGenerate/single', [EventGeneratingController::class, 'generateEvent'])->name('generateEvent')->middleware('IsLogged');
+Route::get('/eventGenerate/sprint', [EventGeneratingController::class, 'getGenerateSprintForm'])->name('getGenerateSprintForm')->middleware('IsLogged');
+Route::post('/eventGenerate/sprint', [EventGeneratingController::class, 'generateSprint'])->name('generateSprint')->middleware('IsLogged');
 
 Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy')->middleware('IsLogged');
 Route::get('/calendarDummy/new', [CalendarController::class, 'getNewEventForm'])->name('getNewEventForm')->middleware('IsLogged');

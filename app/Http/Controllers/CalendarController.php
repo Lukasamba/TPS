@@ -72,6 +72,7 @@ class CalendarController extends Controller
         // dd($events);
 
     foreach($events as $event) {
+
         if (count($event->getCategories())){
         if ($event->getCategories()[0] == 'Red category'){
             array_push($formevents, [

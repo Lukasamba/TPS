@@ -27,6 +27,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/calendarDummy">KalendoriusDummy</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/eventGenerate">Generate</a>
+                      </li>
+
                 </ul>
                 <ul class="navbar-nav ms-auto d-flex">
                     @if(session()->has('userName'))
