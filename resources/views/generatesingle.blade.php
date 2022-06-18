@@ -2,10 +2,21 @@
 
 @section('content')
 
+{{-- Klaidų metimui --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div style="max-width: 1100px;
 margin: 40px auto;
 padding: 0 10px;">
-<h1>Ivykio generavimas</h1>
+<h1>Rasti laiką</h1>
 <form name="myForm" method="POST" action="{{route('generateEvent')}}" onsubmit="return validateForm()" required>
   @csrf
   <div class="form-group">

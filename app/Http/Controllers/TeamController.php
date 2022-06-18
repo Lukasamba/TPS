@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,11 @@ class TeamController extends Controller
 
     public function insertTeam(Request $request)
     {
+        $validated = $request->validate([
+            'eventSubject' => 'required|max:30',
+            'eventBody' => 'required'
+        ]);
+
         $team = new Team;
         $team->teamName = $request->input('teamName');
         $teamId = DB::table('teams')->insertGetId([
@@ -48,6 +54,14 @@ class TeamController extends Controller
         // Nedekit kablelio susimyldami, gale jeigu neirasysit daugiau vardu
         $users = $request->input('query');
         $users = explode(", ", $users);
+
+        // Panaikinti kableliui
+        $lastuser = Arr::last($users);
+        $newlastuser = rtrim($lastuser, ", ");
+        $index = array_search($lastuser, $users);
+        unset($users[$index]);
+        array_push($users, $newlastuser);
+
         foreach ($users as $user) {
             $dbuser = DB::table('users')->where('userName', $user)->first()->userId;
 

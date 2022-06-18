@@ -4,6 +4,17 @@
 
 <link rel="stylesheet" href="{{ asset('/css/form.css') }}">
 
+{{-- Klaidų metimui --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="container">
     <div class="title">Projekto sukūrimo langas</div>
     <form action="{{ url('saveProject') }}" method="POST">
@@ -17,7 +28,7 @@
                 <span class="details">Aprašymas</span>
                 <textarea type="text" class="form-control" name="projectDescription" rows="3"
                     placeholder="Įrašykite projekto aprašymą"></textarea>
-            </div>
+            {{-- </div>
             <div class="form-group">
                 <span class="details">Pradžia</span>
                 <input type="date" class="form-control" id="txtDate" name="startDate" />
@@ -33,7 +44,7 @@
             <div class="form-group2">
                 <span class="details">Sprintu ilgis</span>
                 <input type="number" id="quantity" name="sprintLength" min="1" max="7" placeholder="7">
-            </div>
+            </div> --}}
             <div class="form-group2">
                 <span class="details">Projekto komandos</span>
                 <select name="teamId" id="">

@@ -3,7 +3,6 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('/css/listStyle.css') }}">
 
-
 <h1 style="font-size: 35px">Mano projektai</h1>
 <table class="center"; style="width: 50%">
     <thead>
