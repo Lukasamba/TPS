@@ -11,7 +11,7 @@
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{route('HomePage')}}">TPS</a>
+            <a class="navbar-brand" href="{{route('HomePage')}}">LPS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -25,9 +25,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/calendar">Kalendorius</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/calendarDummy">KalendoriusDummy</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/eventGenerate">Generate</a>

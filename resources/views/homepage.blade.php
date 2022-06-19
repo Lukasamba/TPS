@@ -2,11 +2,10 @@
 
 @section('content')
 <div class="jumbotron">
-  <h1>TPS - Time Planning System</h1>
-  <p class="lead">This is a Time planing Web app that is using Microsoft PHP Graph API</p>
+  <h1>LPS - Laiko planavimo sistema</h1>
+  <p class="lead">"Leiskite planuoti laiką sau"</p>
   @if(session()->has('userName'))
-    <h4>You are logged in as user: {{ session()->get('userName') }}</h4>
-    <p>Use the navigation bar at the top of the page to get started.</p>
+    <h4>Esate prisijungęs kaip: {{ session()->get('userName') }}</h4>
   @else
     <a href="{{route('signin')}}" class="btn btn-primary btn-large">Click here to sign in</a>
   @endif

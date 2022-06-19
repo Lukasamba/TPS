@@ -3,6 +3,7 @@
 @section('content')
 
 <head>
+    <link href="{{ asset('css/team.css') }}" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -46,6 +47,7 @@
             // Updating the modal content using 
             // jQuery query selectors
             var modal = $(this)
+            console.log(allMyProjects);
 
             modal.find('.modal-title')
                 .text('Projektas: ' + projectName)
@@ -68,12 +70,16 @@
         })
 </script>
 
-<h3>Mano projektai</h3>
+<div style="margin: 10px auto; padding: 0 10px;">
+    <a class="btn btn-secondary" href="/projects/new" padding="15px 32px">Sukurti projektą</a>
+    <h3>Mano projektai</h3>
+</div>
+
 <table class="table">
     <thead>
         <tr>
             @if(count($allMyProjects) != 0)
-            <th scope="col">#</th>
+            <th scope="col">Identifikatorius</th>
             <th scope="col">Projekto pavadinimas</th>
             @else
             <p>Projektų nėra</p>
@@ -83,9 +89,9 @@
     <tbody>
         @forelse($allMyProjects as $project)
         <tr>
-            <td>{{$project->projectId}}</td>
-            <td>{{$project->projectName}}</td>
-            <td>
+            <td width="10%">{{$project->projectId}}</td>
+            <td width="80%">{{$project->projectName}}</td>
+            <td width="10%">
                 <a href="#" class="view" title="View" data-desc="{{$project->projectDescription}}" data-name="{{$project->projectName}}"" data-id=" {{$project->projectId}}" data-toggle="modal" data-target="#exampleModal">
                     <i class="material-icons">&#xE417;</i></a>
             </td>
@@ -95,11 +101,14 @@
     </tbody>
 </table>
 
-<h3>Visi projektai</h3>
+<div style="margin: 10px auto; padding: 0 10px;">
+    <h3>Visi projektai</h3>
+</div>
+
 <table class="table">
     <thead>
         @if(count($allprojects) != 0)
-        <th scope="col">#</th>
+        <th scope="col">Identifikatorius</th>
         <th scope="col">Projekto pavadinimas</th>
         @else
         <p>Projektų nėra</p>
@@ -108,9 +117,9 @@
     <tbody>
         @forelse ($allprojects as $project)
         <tr>
-            <td>{{$project->projectId}}</td>
-            <td>{{$project->projectName}}</td>
-            <td>
+            <td width="10%">{{$project->projectId}}</td>
+            <td width="80%">{{$project->projectName}}</td>
+            <td width="10%">
                 <a href="#" class="view" title="View" data-desc="{{$project->projectDescription}}" data-name="{{$project->projectName}}"" data-id=" {{$project->projectId}}" data-toggle="modal" data-target="#exampleModal">
                     <i class="material-icons">&#xE417;</i></a>
             </td>
@@ -119,12 +128,6 @@
         @endforelse
     </tbody>
 </table>
-
-<div id="container" style="padding-bottom: 50px">
-    <a class="button" href='/projects/new'>Sukurti projekta</a>
-</div>
-
-
 
 </div>
 
