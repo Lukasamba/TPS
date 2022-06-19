@@ -5,7 +5,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 
@@ -15,13 +14,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id=".modal-title"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </button> -->
             </div>
-            <div class="modal-body">
-                ...
-            </div>
+            <div class="modal-body" id=".modal-body"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Uždaryti</button>
             </div>
@@ -39,67 +36,72 @@
     <script>
         $('#exampleModal').on('show.bs.modal',
             function(event) {
+                var teams = <?php echo json_encode($teams) ?>;
+                var users = <?php echo json_encode($users) ?>;
+                var team_members = <?php echo json_encode($team_members) ?>;
 
                 // Button that triggered the modal
                 var li = $(event.relatedTarget)
 
                 // Extract info from data attributes 
-                var recipient = li.data('team')
+                var teamId = li.data('id')
+                var teamName = li.data('name')
 
                 // Updating the modal content using 
                 // jQuery query selectors
                 var modal = $(this)
 
                 modal.find('.modal-title')
-                    .text('New message to ' + recipient)
+                    .text('Komanda: ' + teamName)
 
-                modal.find('.modal-body p')
-                    .text('Welcome to ' + recipient)
+                var text = ""
+                for (let i = 0; i < team_members.length; i++) {
+                    if (team_members[i].fk_teamId == teamId) {
+                        text += "\n" + users[team_members[i].fk_userId - 1].userName + ", \n";
+                    }
+                }
+                if (text == "") {
+                    text = "nėra"
+                } else {
+                    text = text.slice(0, -3)
+                }
+
+                modal.find('.modal-body')
+                    .text('Komandos nariai:\n' + text)
             })
     </script>
 
-    <br>
-    <div class="main">
-        <h1>Komandų sąrašas</h1>
-    </div>
+    <h3>Komandų sąrašas</h3>
 
-    <br>
-    <div class="main">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Komandos pavadinimas</th>
-                    <th></th>
-            </thead>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Komandos pavadinimas</th>
+                <th></th>
+        </thead>
+
+        <tbody>
             @foreach($teams as $team)
-
-            <tbody class="table-group-divider">
-                <tr>
-                    <td id="teamId">{{$team->teamId}}</td>
-                    <td>{{$team->teamName}}</td>
-                    <td>
-                        <a href="#" class="view" title="View" data-toggle="modal" data-target="#exampleModal">
-                            <i class="material-icons">&#xE417;</i></a>
-                        <!-- <a href="#" class="edit" title="Edit" data-toggle="tooltip">
+            <tr>
+                <td>{{$team->teamId}}</td>
+                <td>{{$team->teamName}}</td>
+                <td>
+                    <a href="#" class="view" title="View" data-name="{{$team->teamName}}"" data-id=" {{$team->teamId}}" data-toggle="modal" data-target="#exampleModal">
+                        <i class="material-icons">&#xE417;</i></a>
+                    <!-- <a href="#" class="edit" title="Edit" data-toggle="tooltip">
                             <i class="material-icons">&#xE254;</i></a>
                         <a href="#" class="delete" title="Delete" data-toggle="tooltip">
                             <i class="material-icons">&#xE872;</i></a> -->
-                    </td>
-                </tr>
-            </tbody>
+                </td>
+            </tr>
             @endforeach
-
-        </table>
-    </div>
+        </tbody>
+    </table>
 
     <div class="main">
         <a href="/teams/create">Sukurti komandą</a>
     </div>
-
-
-
 </body>
-
 
 @endsection
