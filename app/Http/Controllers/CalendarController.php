@@ -240,6 +240,13 @@ class CalendarController extends Controller
 }
 public function createNewEvent(Request $request)
 {
+  $validated = $request->validate([
+    'eventSubject' => 'required|max:30',
+    'eventBody' => 'required|max:255',
+    'eventDay' => 'required',
+    'timeStart' => 'required',
+    'timeEnd' => 'required'
+]);
 //   dd($request->eventSubject);
   // Validate required fields
 //   $request->validate([
@@ -399,8 +406,16 @@ public function initEditEvent(Request $request)
 }
 public function createNewEventTest(Request $request)
 {
+  $validated = $request->validate([
+    'eventSubject' => 'required|max:30',
+    'eventBody' => 'required|max:255',
+    'eventDay' => 'required',
+    'timeStart' => 'required',
+    'timeEnd' => 'required',
+    'Atendee' => 'required'
+]);
 //   dd($request->eventSubject);
-  // Validate required fields
+//   Validate required fields
 //   $request->validate([
 //     'eventSubject' => 'nullable|string',
 //     'eventAttendees' => 'nullable|string',

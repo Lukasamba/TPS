@@ -49,7 +49,10 @@ class ProjectController extends Controller
                 array_push($allMyProjects, $myprojects);
             }
         }
-        return view('projectspage', compact('allprojects'), compact('allMyProjects'));
+        $allMyProjects = collect($allMyProjects)->sortBy('projectName')->toArray();
+        $teams = DB::table('teams')->get();
+        $team_projects = DB::table('team_projects')->get();
+        return view('projectspage', compact('allprojects', 'allMyProjects', 'teams', 'team_projects'));
     }
 
     public function getNewProjectForm()

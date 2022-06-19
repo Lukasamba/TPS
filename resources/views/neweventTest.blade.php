@@ -2,6 +2,17 @@
 
 @section('content')
 
+{{-- Klaidų metimui --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div style="max-width: 1100px;
 margin: 40px auto;
 padding: 0 10px;">
