@@ -33,9 +33,11 @@ class ProjectController extends Controller
         // Returns all projects
         $allprojects = Project::all();
         // Get users id
-        $userId = User::select(['userId'])->where('userEmail', session()->get('userEmail'))->exists();
+        $userId = DB::table('users')->where('userEmail', session()->get('userEmail'))->value('userId');
+        // dd($userId);
         // Teams by users id
         $myTeams = DB::table('team_members')->where('fk_userId', $userId)->get();
+        // dd($myTeams);
         foreach ($myTeams as $team) {
             // Projects by my teams
             $projectId = DB::table('team_projects')->where('fk_teamId', $team->fk_teamId)->value('fk_projectId');
@@ -43,6 +45,7 @@ class ProjectController extends Controller
                 $projectIds = $projectIds->merge($projectId);
             }
         }
+
         foreach ($projectIds as $id) {
             $myprojects = DB::table('projects')->where('projectId', $id)->get()->first();
             if (!is_null($myprojects)) {
