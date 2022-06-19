@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Validation\ValidationException;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Illuminate\Support\MessageBag;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
@@ -34,25 +31,20 @@ class ProjectController extends Controller
         static $allMyProjects = array();
 
         // Returns all projects
-        $allprojects = Project::all()->sortBy('projectName'); 
-
+        $allprojects = Project::all();
         // Get users id
         $userId = User::select(['userId'])->where('userEmail', session()->get('userEmail'))->exists();
-
-        // Get all teams with this users id
+        // Teams by users id
         $myTeams = DB::table('team_members')->where('fk_userId', $userId)->get();
-
-        // Get all project IDs from those teams
         foreach ($myTeams as $team) {
-            $projectId = DB::table('team_projects')->where('fk_teamId', $team->fk_teamId)->get('fk_projectId');
+            // Projects by my teams
+            $projectId = DB::table('team_projects')->where('fk_teamId', $team->fk_teamId)->value('fk_projectId');
             if (!is_null($projectId)) {
                 $projectIds = $projectIds->merge($projectId);
             }
         }
-
-        // Make project array
-        foreach ($projectIds as $pids) {
-            $myprojects = DB::table('projects')->where('projectId', $pids->fk_projectId)->get()->first();
+        foreach ($projectIds as $id) {
+            $myprojects = DB::table('projects')->where('projectId', $id)->get()->first();
             if (!is_null($myprojects)) {
                 array_push($allMyProjects, $myprojects);
             }
@@ -91,11 +83,6 @@ class ProjectController extends Controller
     // Inserts project into database
     public function insertProject(Request $request)
     {
-        $validated = $request->validate([
-            'projectName' => 'required|max:30',
-            'projectDescription' => 'required|max:255'
-        ]);
-
         $project = new Project;
         $project->projectName = $request->input('projectName');
         $project->projectDescription = $request->input('projectDescription');

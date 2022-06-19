@@ -63,31 +63,27 @@ class EventGeneratingController extends Controller
 }
 public function generateEvent(Request $request)
 {
-    $validated = $request->validate([
-    'teamName' => 'required|max:30',
-    'query' => 'required'
-    ]);
-    //   dd($request->eventSubject);
-    // Validate required fields
-    //   $request->validate([
-    //     'eventSubject' => 'nullable|string',
-    //     'eventAttendees' => 'nullable|string',
-    //     'eventStart' => 'required|date',
-    //     'eventEnd' => 'required|date',
-    //     'eventBody' => 'nullable|string'
-    //   ]);
+//   dd($request->eventSubject);
+  // Validate required fields
+//   $request->validate([
+//     'eventSubject' => 'nullable|string',
+//     'eventAttendees' => 'nullable|string',
+//     'eventStart' => 'required|date',
+//     'eventEnd' => 'required|date',
+//     'eventBody' => 'nullable|string'
+//   ]);
     //dd($request->eventDay, $request->eventDay ,$request->rezerve,$request->minutes,$request->hours);
     $dayCount = $request->interval;
-    $viewData = $this->loadViewData();
-    $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
-    $start = new \DateTimeImmutable($request->eventDay . "T" . '00:00', $timezone);
-    $tempStart= new \DateTimeImmutable($request->eventDay . "T" . '08:00', $timezone);
-    $tempEnd=new \DateTimeImmutable($request->eventDay . "T" . '19:00', $timezone);
-    $temp0= new \DateTimeImmutable($request->eventDay . "T" . '00:00', $timezone);
-    $temp0 = $temp0->add(new DateInterval('P1D'));
-    $startinit = new \DateTimeImmutable($request->eventDay . "T" . $request->timeStart, $timezone);
-    $graph = $this->getGraph();
-    if (microtime(true) > session('tokenExpires')){
+  $viewData = $this->loadViewData();
+  $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
+  $start = new \DateTimeImmutable($request->eventDay . "T" . '00:00', $timezone);
+  $tempStart= new \DateTimeImmutable($request->eventDay . "T" . '08:00', $timezone);
+  $tempEnd=new \DateTimeImmutable($request->eventDay . "T" . '19:00', $timezone);
+  $temp0= new \DateTimeImmutable($request->eventDay . "T" . '00:00', $timezone);
+  $temp0 = $temp0->add(new DateInterval('P1D'));
+  $startinit = new \DateTimeImmutable($request->eventDay . "T" . $request->timeStart, $timezone);
+  $graph = $this->getGraph();
+  if (microtime(true) > session('tokenExpires')){
     return redirect('/signin');
 }
   $endofInterval = $startinit->add(new DateInterval('P' . $dayCount . 'D'));
