@@ -47,7 +47,6 @@
             // Updating the modal content using
             // jQuery query selectors
             var modal = $(this)
-            console.log(allMyProjects);
 
             modal.find('.modal-title')
                 .text('Projektas: ' + projectName)
