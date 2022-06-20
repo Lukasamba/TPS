@@ -13,7 +13,6 @@
 margin: 40px auto;
 padding: 0 10px;">
 <a class="btn btn-primary" href=/calendar/new>Sukurti</a>
-<a class="btn btn-primary" href=/calendar/newTest>Sukurti Keliems Useriams (Test)</a>
 </div>
 <div id='calendar'>
 
