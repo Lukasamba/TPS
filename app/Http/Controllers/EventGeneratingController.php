@@ -709,6 +709,50 @@ if($result != false){
         $eventSubjektas = 'Komandos '. $teamName . ', Projekto ' . $projectName. ' Ivykis';
         $EndTimeStart = $r[0]->format('Y-m-d') . "T" . $r[0]->format('H:i');
         $EndTimeDate = $r[1]->format('Y-m-d') . "T" . $r[1]->format('H:i');
+        $from = $r[0];
+        $to = $r[1];
+
+        $reservTimes = DB::table('events')
+                ->where('start', '>=', $from)->where('start', '<=', $to)
+                ->orWhere('end', '>=', $from)->where('end', '<=', $to)
+                ->orWhere('start', '<=', $from)->where('end', '>=', $to)->get('fk_roomId');
+          $allRoomas = DB::table('rooms')->get();
+          // $unnocupiedrooms
+          $roomArray = [];
+          foreach($allRoomas as $room){
+              array_push($roomArray, $room->roomId);
+          }
+          // dd($roomArray);
+          foreach(range(0, count($roomArray) - 1) as $i){
+              foreach($reservTimes as $res){
+                  if($res->fk_roomId == $roomArray[$i]){
+                      unset($roomArray[$i]);
+                      break;
+                  }
+              }
+          }
+          $theRoom = 0;
+          // dd($roomArray);
+          if (!empty($roomArray)){
+              foreach($roomArray as $ii ){
+                  $theRoom = $ii;
+              }
+          }
+
+          if($theRoom != 0){
+              $projectId = DB::table('events')->insertGetId([
+                  'start' => $from,
+                  'end' => $to,
+                  'fk_teamId' => $teamId,
+                  'fk_projectId' => $request->idas,
+                  'fk_roomId' => $theRoom
+              ]);
+              $rooomName = DB::table('rooms')->where('roomId', $theRoom)->first();
+              $rooomName = $rooomName->roomName;
+          }
+          else{
+              $rooomName = 'MS TEAMS';
+          }
         $newEvent = [];
         if ('Sreview' == $r[2]){
         $newEvent = [
@@ -720,6 +764,9 @@ if($result != false){
             'end' => [
               'dateTime' => $EndTimeDate,
               'timeZone' => $viewData['userTimeZone']
+            ],
+            'location' => [
+                'displayName' => $rooomName
             ],
             'body' => [
               'content' => $eventSubjektas,
@@ -735,6 +782,9 @@ if($result != false){
                 'start' => [
                   'dateTime' => $EndTimeStart,
                   'timeZone' => $viewData['userTimeZone']
+                ],
+                'location' => [
+                    'displayName' => $rooomName
                 ],
                 'end' => [
                   'dateTime' => $EndTimeDate,
@@ -755,6 +805,9 @@ if($result != false){
                       'dateTime' => $EndTimeStart,
                       'timeZone' => $viewData['userTimeZone']
                     ],
+                    'location' => [
+                        'displayName' => $rooomName
+                    ],
                     'end' => [
                       'dateTime' => $EndTimeDate,
                       'timeZone' => $viewData['userTimeZone']
@@ -773,6 +826,9 @@ if($result != false){
                         'start' => [
                           'dateTime' => $EndTimeStart,
                           'timeZone' => $viewData['userTimeZone']
+                        ],
+                        'location' => [
+                            'displayName' => $rooomName
                         ],
                         'end' => [
                           'dateTime' => $EndTimeDate,
