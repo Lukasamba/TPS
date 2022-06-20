@@ -31,7 +31,7 @@ padding: 0 10px;">
           </div>
           <div class="modal-body">
             <p id="monthDayWeekDay"></p>
-            <hr>Aprasymas:
+            <hr>Aprašymas:
             <p id="description"></p>
           </div>
           <div class="modal-footer">
@@ -64,7 +64,7 @@ padding: 0 10px;">
           </div>
           <div class="modal-body">
             <p id="monthDayWeekDay"></p>
-            <hr>Aprasymas:
+            <hr>Aprašymas:
             <p id="description"></p>
           </div>
           <div class="modal-footer">

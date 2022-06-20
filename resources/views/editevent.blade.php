@@ -9,7 +9,7 @@ padding: 0 10px;">
 <form method="POST" action="{{route('initEditEvent')}}">
   @csrf
   <div class="form-group">
-    <label>Ivykio pavadinimas</label>
+    <label>Įvykio pavadinimas</label>
   <input type="hidden" class="form-control" name="eventId" value="{{$eId}}"/>
     <input type="text" class="form-control" name="eventSubject" value="{{$ttl}}"/>
   </div>
@@ -25,7 +25,7 @@ padding: 0 10px;">
     </div>
     <div class="col-sm">
       <div class="form-group">
-        <label>Pradzia</label>
+        <label>Pradžia</label>
         <input type="time" class="form-control" name="timeStart" id="timeStart" min="08:00" max="19:00" value="{{$eStart}}"/>
       </div>
       @error('timeStart')
@@ -45,11 +45,11 @@ padding: 0 10px;">
 </div>
 
   <div class="form-group">
-    <label>Aprasas</label>
+    <label>Aprašas</label>
     <textarea type="text" class="form-control" name="eventBody" rows="3" >{{$dsc}}</textarea>
   </div>
   <input type="submit" class="btn btn-primary mr-2" value="Redaguoti" />
-  <a class="btn btn-secondary" href=/calendar>Atsaukti</a>
+  <a class="btn btn-secondary" href=/calendar>Atšaukti</a>
 </form>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

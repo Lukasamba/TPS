@@ -8,8 +8,8 @@
 <div style="max-width: 1100px;
 margin: 40px auto;
 padding: 0 10px;">
-<a class="btn btn-primary" href=/eventGenerate/single>Rasti laika</a>
-<a class="btn btn-primary" href=/eventGenerate/sprint>Generuoti Sprinta</a>
+<a class="btn btn-primary" href=/eventGenerate/single>Rasti laiką</a>
+<a class="btn btn-primary" href=/eventGenerate/sprint>Generuoti SPRINT</a>
 {{-- <a class="btn btn-primary" href=/calendar/newTest>Sukurti Keliems Useriams (Test)</a> --}}
 </div>
 
