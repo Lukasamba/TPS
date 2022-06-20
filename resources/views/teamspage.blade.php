@@ -58,7 +58,9 @@
                 var text = ""
                 for (let i = 0; i < team_members.length; i++) {
                     if (team_members[i].fk_teamId == teamId) {
-                        text += "\n" + users[team_members[i].fk_userId - 1].userName + ", \n";
+                        user_id = team_members[i].fk_userId
+                        text += "\n" + users.find(user => user.userId === user_id).userName + ", \n";
+                        // text += "\n" + users[team_members[i].fk_userId - 1].userName + ", \n";
                     }
                 }
                 if (text == "") {
