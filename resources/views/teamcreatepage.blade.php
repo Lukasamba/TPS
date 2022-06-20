@@ -22,7 +22,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <script>
-        $(function() {oninvalid="this.setCustomValidity('Lütfen işaretli yerleri doldurunuz')"}) ;
         $(function() {
             var names = @json($names);
             var emails = @json($emails);
@@ -77,7 +76,7 @@
     <div style="max-width: 1100px;
     margin: 40px auto;
     padding: 0 10px;">
-        <h1>Sukurti komandą</h1>
+        <h1>Komandos kūrimas</h1>
         <form action="{{ url('save-team') }}" method="POST">
             @csrf
 
@@ -86,7 +85,7 @@
                 <label>Komandos pavadinimas:</label>
                 <div class="row">
                     <div class="col-sm">
-                    <input type="text" class="form-control" id="name" name="teamName" placeholder="Pavadinimas" required oninvalid="this.setCustomValidity('Prašome įvesti pavadinimą :)')">
+                    <input type="text" class="form-control" id="name" name="teamName" placeholder="Pavadinimas" required oninvalid="this.setCustomValidity('Prašome įvesti pavadinimą :)')" oninput="setCustomValidity('')">
                     </div>
                 </div>
             </div>
@@ -95,7 +94,7 @@
                 <label>Įrašyti narius:</label>
                 <div class="row">
                     <div class="col-sm">
-                    <input type="search" class="form-control" name="query" id="names" placeholder="Vardenis Pavardenis, ..." required oninvalid="this.setCustomValidity('Įveskite ')">
+                    <input type="search" class="form-control" name="query" id="names" placeholder="Vardenis Pavardenis, ..." required oninvalid="this.setCustomValidity('Prašome pasirinkti bent vienną narį :)')" oninput="setCustomValidity('')">
                     </div>
                 </div>
             </div>
