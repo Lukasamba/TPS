@@ -193,7 +193,51 @@ for($i = 0; $i < count($array1); ++$i) {
 if($result != false){
 $EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');
   $EndTimeDate = $result[1]->format('Y-m-d') . "T" . $result[1]->format('H:i');
-    // dd($request->eventSubject, $request->eventDay, $request->timeStart, $request->timeEnd, $request->eventBody, $EndTimeDate);
+  $from = $result[0];
+  $to = $result[1];
+
+  $reservTimes = DB::table('events')
+          ->where('start', '>=', $from)->where('start', '<=', $to)
+          ->orWhere('end', '>=', $from)->where('end', '<=', $to)
+          ->orWhere('start', '<=', $from)->where('end', '>=', $to)->get('fk_roomId');
+    $allRoomas = DB::table('rooms')->get();
+    // $unnocupiedrooms
+    $roomArray = [];
+    foreach($allRoomas as $room){
+        array_push($roomArray, $room->roomId);
+    }
+    // dd($roomArray);
+    foreach(range(0, count($roomArray) - 1) as $i){
+        foreach($reservTimes as $res){
+            if($res->fk_roomId == $roomArray[$i]){
+                unset($roomArray[$i]);
+                break;
+            }
+        }
+    }
+    $theRoom = 0;
+    // dd($roomArray);
+    if (!empty($roomArray)){
+        foreach($roomArray as $ii ){
+            $theRoom = $ii;
+        }
+    }
+
+    if($theRoom != 0){
+        $projectId = DB::table('events')->insertGetId([
+            'start' => $from,
+            'end' => $to,
+            'fk_teamId' => $teamId,
+            'fk_projectId' => $request->idas,
+            'fk_roomId' => $theRoom
+        ]);
+        $rooomName = DB::table('rooms')->where('roomId', $theRoom)->first();
+        $rooomName = $rooomName->roomName;
+    }
+    else{
+        $rooomName = 'MS TEAMS';
+    }
+    // dd($rooomName->roomName);
   // Build the event
     $eventSubjektas = 'Komandos '. $teamName . ', Projekto ' . $projectName. ' Ivykis';
   $newEvent = [
@@ -201,6 +245,9 @@ $EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');
     'start' => [
       'dateTime' => $EndTimeStart,
       'timeZone' => $viewData['userTimeZone']
+    ],
+    'location' => [
+        'displayName' => $rooomName
     ],
     'end' => [
       'dateTime' => $EndTimeDate,

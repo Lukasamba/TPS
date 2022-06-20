@@ -150,7 +150,7 @@ class CalendarController extends Controller
             'description' => $event->getBodyPreview(),
             'borderColor' => 'black',
 
-            'eventType' => 'Simple Event',
+            'eventType' => 'Ivykis :',
             'eventId' => $event->getId(),
           ]);
     }
