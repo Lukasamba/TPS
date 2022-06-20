@@ -32,7 +32,7 @@ class ProjectController extends Controller
 
         // Returns all projects
         $allprojects = Project::all();
-        
+
         // Get users id
         $userId = DB::table('users')->where('userEmail', session()->get('userEmail'))->value('userId');
 
@@ -87,11 +87,17 @@ class ProjectController extends Controller
     public function insertProject(Request $request)
     {
         $project = new Project;
+        $project->sprintDuration = $request->input('sprintLength');
+        $project->sprintCount = $request->input('sprintQuantity');
         $project->projectName = $request->input('projectName');
         $project->projectDescription = $request->input('projectDescription');
+        $project->start = $request->input('startDate');
         $projectId = DB::table('projects')->insertGetId([
             'projectName' => $project->projectName,
-            'projectDescription' => $project->projectDescription
+            'projectDescription' => $project->projectDescription,
+            'sprintDuration' => $project->sprintDuration,
+            'sprintCount' => $project->sprintCount,
+            'start' => $project->start
         ]);
 
         // TeamId, ProjectID

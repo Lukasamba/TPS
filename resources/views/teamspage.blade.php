@@ -44,11 +44,11 @@
                 // Button that triggered the modal
                 var li = $(event.relatedTarget)
 
-                // Extract info from data attributes 
+                // Extract info from data attributes
                 var teamId = li.data('id')
                 var teamName = li.data('name')
 
-                // Updating the modal content using 
+                // Updating the modal content using
                 // jQuery query selectors
                 var modal = $(this)
 

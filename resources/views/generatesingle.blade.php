@@ -27,6 +27,7 @@ padding: 0 10px;">
         <div class="col-sm">
             <label>Valandos</label>
             <input type="number" class="form-control" name="hours" value="1" max="11" min="0" required/>
+            <input type="number" class="form-control" name="idas" value="{{$idss}}" hidden/>
         </div>
         <div class="col-sm">
             <label>Minutes</label>

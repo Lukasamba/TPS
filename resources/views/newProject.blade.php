@@ -48,9 +48,11 @@
             </div> -->
             <div class="form-group" style="padding-top: 10px;">
                 <span class="details">Sprintu kiekis</span>
-                <input type="number" id="quantity" name="sprintQuantity" min="1" max="10" placeholder="10">
+                <input type="number" id="quantity" name="sprintQuantity" min="1" max="12" placeholder="4" required>
                 <span class="details">Sprintu ilgis</span>
-                <input type="number" id="quantity" name="sprintLength" min="1" max="7" placeholder="7">
+                <input type="number" id="quantity" name="sprintLength" min="1" max="4" placeholder="2" required>
+                <span class="details">Sprinto pradzia</span>
+                <input type="date" id="txtDate" name="startDate" style="width: 200px;"/>
             </div>
 
             <div class="form-group" style="padding-top: 10px;">
@@ -71,7 +73,7 @@
     </div>
 </body>
 
-<!-- 
+<!--
 {{-- <div class="container">
     <h1>Sukurti projekta</h1>
     <form action="{{ url('saveProject') }}" method="POST">
@@ -119,4 +121,26 @@
     </form>
 </div> --}} -->
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script>
+    $(function(){
+    var dtToday = new Date();
+
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+
+    var maxDate = year + '-' + month + '-' + day;
+
+    // or instead:
+    // var maxDate = dtToday.toISOString().substr(0, 10);
+
+    $('#txtDate').attr('min', maxDate);
+});
+    </script>
 @endsection

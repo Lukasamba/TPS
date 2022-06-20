@@ -10,6 +10,7 @@ use App\Models\User;
 use App\TokenStore\TokenCache;
 use App\TimeZones\TimeZones;
 use DateInterval;
+use Illuminate\Support\Facades\DB;
 
 class EventGeneratingController extends Controller
 {
@@ -52,17 +53,37 @@ class EventGeneratingController extends Controller
     $graph->setAccessToken($accessToken);
     return $graph;
   }
-  public function getGenerateEventForm()
+  public function getGenerateEventForm($id)
 {
+    // dd($id);
   $viewData = $this->loadViewData();
   $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
   $now = new \DateTimeImmutable('now', $timezone);
   $viewData['nowtime']=$now->format('H:i');
   $viewData['nowdatee']=$now->format('Y-m-d');
+  $viewData['idss']=$id;
   return view('generatesingle', $viewData);
 }
 public function generateEvent(Request $request)
 {
+    $userId = DB::table('users')->where('userEmail', session()->get('userEmail'))->value('userId');
+    $teamIds = DB::table('team_projects')->where('fk_projectId', $request->idas)->get();
+    foreach($teamIds as $teamas){
+        $teamId = DB::table('team_members')->where('fk_userId', $userId)->where('fk_teamId', $teamas->fk_teamId)->value('fk_teamId');
+    }
+    $userIds = DB::table('team_members')->where('fk_teamId', $teamId)->get('fk_userId');
+    $teamUsers = [];
+    foreach($userIds as $iter){
+
+        $tempUser = DB::table('users')->where('userId', $iter->fk_userId)->first();
+        array_push($teamUsers, $tempUser);
+
+    }
+    $projectName = DB::table('projects')->where('projectId', $request->idas)->first('projectName');
+    $teamName = DB::table('teams')->where('teamId', $teamId)->first('teamName');
+    $teamName = $teamName->teamName;
+    $projectName = $projectName->projectName;
+
 //   dd($request->eventSubject);
   // Validate required fields
 //   $request->validate([
@@ -87,8 +108,29 @@ public function generateEvent(Request $request)
     return redirect('/signin');
 }
   $endofInterval = $startinit->add(new DateInterval('P' . $dayCount . 'D'));
+  $endofInterval = new \DateTimeImmutable($endofInterval->format('Y-m-d') . "T" . '00:00', $timezone);
 
-  $queryParams = array(
+// dd($rToken,$aToken,$eemail, $newAccessToken->getToken());
+$oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+    'clientId'                => config('azure.appId'),
+    'clientSecret'            => config('azure.appSecret'),
+    'redirectUri'             => config('azure.redirectUri'),
+    'urlAuthorize'            => config('azure.authority').config('azure.authorizeEndpoint'),
+    'urlAccessToken'          => config('azure.authority').config('azure.tokenEndpoint'),
+    'urlResourceOwnerDetails' => '',
+    'scopes'                  => config('azure.scopes')
+  ]);
+  $array = [];
+foreach($teamUsers as $teamUser){
+
+$newAccessToken = $oauthClient->getAccessToken('refresh_token', [
+    'refresh_token' => $teamUser->refreshToken
+]);
+$accessToken = $newAccessToken->getToken();
+$affected = DB::table('users')
+              ->where('userId', $teamUser->userId)
+              ->update(['accessToken' => $accessToken]);
+$queryParams = array(
     'startDateTime' => $startinit->format(\DateTimeInterface::ISO8601),
     'endDateTime' => $endofInterval->format(\DateTimeInterface::ISO8601),
     // Only request the properties used by the app
@@ -98,11 +140,12 @@ public function generateEvent(Request $request)
     // Limit results to 25
     '$top' => 100
   );
-  $getEventsUrl = '/me/calendarView?'.http_build_query($queryParams);
+  $getEventsUrl = '/me/calendar/calendarView?'.http_build_query($queryParams);
     //dd(microtime(true));
     if (microtime(true) > session('tokenExpires')){
         return redirect('/signin');
     }
+    $graph->setAccessToken($accessToken);
     $events = $graph->createRequest('GET', $getEventsUrl)
       // Add the user's timezone to the Prefer header
       ->addHeaders(array(
@@ -110,25 +153,39 @@ public function generateEvent(Request $request)
       ))
       ->setReturnType(Model\Event::class)
       ->execute();
-  $array = [];
+
   foreach($events as $event) {
-    $array[] = [new \DateTimeImmutable($event->getStart()->getDateTime(), $timezone), new \DateTimeImmutable($event->getEnd()->getDateTime(), $timezone)];
+    $array1[] = new \DateTimeImmutable($event->getStart()->getDateTime(), $timezone);
+    $array2[] = new \DateTimeImmutable($event->getEnd()->getDateTime(), $timezone);
   }
+}
+
+array_multisort($array1,$array2);
+for($i = 0; $i < count($array1); ++$i) {
+   $array[$i] = [$array1[$i], $array2[$i]];
+}
+// dd($array);
 //   dd($array);
   $days = [];
   $temp = new \DateTimeImmutable($request->eventDay, $timezone);
+
   foreach(range(0, $dayCount - 1) as $i){
       if ($temp->format('N') < 6){
         $times = [];
         $days[] = [$temp, $times];
+
       }
       $temp = $temp->add(new DateInterval('P1D'));
   }
+
   //dd($days);
+
   $arrays = $this->getFreeTimes($array, $days, $startinit, $start, $tempStart, $tempEnd, $temp0, $timezone);
+//   dd($array);
   $result = $this->getCorrectTime($arrays, $request->rezerve,$request->minutes,$request->hours);
 //   dd($result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i'), $result[1]->format('Y-m-d') . "T" . $result[1]->format('H:i'));
-  $EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');
+// dd($array, $result);
+$EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');
   $EndTimeDate = $result[1]->format('Y-m-d') . "T" . $result[1]->format('H:i');
     // dd($request->eventSubject, $request->eventDay, $request->timeStart, $request->timeEnd, $request->eventBody, $EndTimeDate);
   // Build the event
@@ -147,6 +204,8 @@ public function generateEvent(Request $request)
       'contentType' => 'text'
     ]
   ];
+  foreach($teamUsers as $teamUser){
+    $graph->setAccessToken($teamUser->accessToken);
   $response = $graph->createRequest('POST', '/me/events' )
     ->attachBody($newEvent)
     ->setReturnType(Model\Event::class)
@@ -156,7 +215,8 @@ public function generateEvent(Request $request)
 //   dd($arrays);
 //   dd($start->format('Y-m-d') . 'T' . $start->format('H:i'), $end->format('Y-m-d') . 'T' . $end->format('H:i'), $startfixed->format('Y-m-d') . 'T' . $startfixed->format('H:i'),
 //   $endfixed->format('Y-m-d') . 'T' . $endfixed->format('H:i'));
-  return redirect('/calendar')->with('wtf', session('accessToken'));
+  }
+return redirect('/calendar')->with('wtf', session('accessToken'));
 }
 private function getFreeTimes($array, $days, $startinit, $start, $tempStart, $tempEnd, $temp0, $timezone)
 {
@@ -181,8 +241,12 @@ private function getFreeTimes($array, $days, $startinit, $start, $tempStart, $te
 
         // //dd($array[$i][0]->format('Y-m-d'), $days[$daynumber][0]->format('Y-m-d'));
         $compare= new \DateTimeImmutable($array[$i][0]->format('Y-m-d'), $timezone);
-
+        // print_r($daynumber);
+        // if($daynumber == 1){
+        //     return $days;
+        // }
         if($compare > $days[$daynumber][0]){
+
             //dd($start->format('Y-m-d\TH:i'), $tempStart->format('Y-m-d\TH:i'));
             if($start <= $tempStart){ // 08:00 >=  start
                 //dd($end->format('Y-m-d\TH:i'), $tempStart->format('Y-m-d\TH:i'));

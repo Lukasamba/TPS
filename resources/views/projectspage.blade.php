@@ -40,11 +40,11 @@
             // Button that triggered the modal
             var li = $(event.relatedTarget)
 
-            // Extract info from data attributes 
+            // Extract info from data attributes
             var projectId = li.data('id')
             var projectName = li.data('name')
 
-            // Updating the modal content using 
+            // Updating the modal content using
             // jQuery query selectors
             var modal = $(this)
             console.log(allMyProjects);
@@ -90,10 +90,12 @@
         @forelse($allMyProjects as $project)
         <tr>
             <td width="10%">{{$project->projectId}}</td>
-            <td width="80%">{{$project->projectName}}</td>
-            <td width="10%">
+            <td width="65%">{{$project->projectName}}</td>
+            <td width="25%">
                 <a href="#" class="view" title="View" data-desc="{{$project->projectDescription}}" data-name="{{$project->projectName}}"" data-id=" {{$project->projectId}}" data-toggle="modal" data-target="#exampleModal">
                     <i class="material-icons">&#xE417;</i></a>
+                <a class="btn btn-primary" href="/eventGenerate/single/{{$project->projectId}}">Generuoti Iviki</a>
+                <a class="btn btn-primary" href="/eventGenerate/sprint/{{$project->projectId}}">Generuoti Sprinta</a>
             </td>
         </tr>
         @empty

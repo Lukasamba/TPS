@@ -37,9 +37,9 @@ Route::get('/signout', [AuthController::class, 'signout'])->name('signout')->mid
 Route::any('/sync', [AuthController::class, 'sync'])->name('sync')->middleware('IsLogged');
 Route::get('/eventGenerate', [EventGeneratingController::class, 'openGeneratingPage'])->name('GenerateEvent')->middleware('IsLogged');
 
-Route::get('/eventGenerate/single', [EventGeneratingController::class, 'getGenerateEventForm'])->name('getGenerateEventForm')->middleware('IsLogged');
+Route::get('/eventGenerate/single/{id}', [EventGeneratingController::class, 'getGenerateEventForm'])->name('getGenerateEventForm')->middleware('IsLogged');
 Route::post('/eventGenerate/single', [EventGeneratingController::class, 'generateEvent'])->name('generateEvent')->middleware('IsLogged');
-Route::get('/eventGenerate/sprint', [EventGeneratingController::class, 'getGenerateSprintForm'])->name('getGenerateSprintForm')->middleware('IsLogged');
+Route::get('/eventGenerate/sprint/{id}', [EventGeneratingController::class, 'getGenerateSprintForm'])->name('getGenerateSprintForm')->middleware('IsLogged');
 Route::post('/eventGenerate/sprint', [EventGeneratingController::class, 'generateSprint'])->name('generateSprint')->middleware('IsLogged');
 
 Route::get('/calendarDummy', [CalendarController::class, 'calendarDummy'])->name('calendarDummy')->middleware('IsLogged');

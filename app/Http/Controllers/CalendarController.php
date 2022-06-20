@@ -509,10 +509,7 @@ foreach($Test as $userTest){
     ]
   ];
   // POST /me/events
-  $response = $graph->createRequest('POST', '/me/events' )
-    ->attachBody($newEvent)
-    ->setReturnType(Model\Event::class)
-    ->execute();
+
   $response = $newgraph->createRequest('POST', '/me/events' )
     ->attachBody($newEvent)
     ->setReturnType(Model\Event::class)

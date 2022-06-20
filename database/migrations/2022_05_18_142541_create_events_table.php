@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id('eventId');
+            $table->datetime('start');
+            $table->datetime('end');
             $table->foreignId('fk_teamId')->references('teamId')->on('teams');
             $table->foreignId('fk_projectId')->references('projectId')->on('projects');
             $table->foreignId('fk_roomId')->nullable()->references('roomId')->on('rooms');

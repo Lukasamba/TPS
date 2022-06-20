@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id('projectId');
+            $table->integer('sprintDuration');
+            $table->integer('sprintCount');
             $table->string('projectName');
             $table->string('projectDescription');
+            $table->date('start');
             $table->timestamps();
         });
     }
