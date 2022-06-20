@@ -117,15 +117,6 @@ padding: 0 10px;">
 </div>
     <br>
 
-    <div class="form-group">
-        <label>Ivykio pavadinimas</label>
-        <input type="text" class="form-control" name="eventSubject" />
-      </div>
-      <br>
-      <div class="form-group">
-    <label>Aprasas</label>
-    <textarea type="text" class="form-control" name="eventBody" rows="3"></textarea>
-  </div>
   <br>
   <input type="submit" class="btn btn-primary mr-2" value="Generuoti" />
   <a class="btn btn-secondary" href=/eventGenerate>Atsaukti</a>

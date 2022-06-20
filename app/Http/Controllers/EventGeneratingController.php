@@ -121,6 +121,8 @@ $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
     'scopes'                  => config('azure.scopes')
   ]);
   $array = [];
+  $array1 = [];
+  $array2 = [];
 foreach($teamUsers as $teamUser){
 
 $newAccessToken = $oauthClient->getAccessToken('refresh_token', [
@@ -159,8 +161,10 @@ $queryParams = array(
     $array2[] = new \DateTimeImmutable($event->getEnd()->getDateTime(), $timezone);
   }
 }
+if (!empty($array1)) {
+    array_multisort($array1,$array2);
+}
 
-array_multisort($array1,$array2);
 for($i = 0; $i < count($array1); ++$i) {
    $array[$i] = [$array1[$i], $array2[$i]];
 }
@@ -170,11 +174,11 @@ for($i = 0; $i < count($array1); ++$i) {
   $temp = new \DateTimeImmutable($request->eventDay, $timezone);
 
   foreach(range(0, $dayCount - 1) as $i){
-      if ($temp->format('N') < 6){
+
         $times = [];
         $days[] = [$temp, $times];
 
-      }
+
       $temp = $temp->add(new DateInterval('P1D'));
   }
 
@@ -185,12 +189,15 @@ for($i = 0; $i < count($array1); ++$i) {
   $result = $this->getCorrectTime($arrays, $request->rezerve,$request->minutes,$request->hours);
 //   dd($result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i'), $result[1]->format('Y-m-d') . "T" . $result[1]->format('H:i'));
 // dd($array, $result);
+// dd($result);
+if($result != false){
 $EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');
   $EndTimeDate = $result[1]->format('Y-m-d') . "T" . $result[1]->format('H:i');
     // dd($request->eventSubject, $request->eventDay, $request->timeStart, $request->timeEnd, $request->eventBody, $EndTimeDate);
   // Build the event
+    $eventSubjektas = 'Komandos '. $teamName . ', Projekto ' . $projectName. ' Ivykis';
   $newEvent = [
-    'subject' => $request->eventSubject,
+    'subject' => $eventSubjektas,
     'start' => [
       'dateTime' => $EndTimeStart,
       'timeZone' => $viewData['userTimeZone']
@@ -200,7 +207,7 @@ $EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');
       'timeZone' => $viewData['userTimeZone']
     ],
     'body' => [
-      'content' => $request->eventBody,
+      'content' => $eventSubjektas,
       'contentType' => 'text'
     ]
   ];
@@ -216,6 +223,7 @@ $EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');
 //   dd($start->format('Y-m-d') . 'T' . $start->format('H:i'), $end->format('Y-m-d') . 'T' . $end->format('H:i'), $startfixed->format('Y-m-d') . 'T' . $startfixed->format('H:i'),
 //   $endfixed->format('Y-m-d') . 'T' . $endfixed->format('H:i'));
   }
+}
 return redirect('/calendar')->with('wtf', session('accessToken'));
 }
 private function getFreeTimes($array, $days, $startinit, $start, $tempStart, $tempEnd, $temp0, $timezone)

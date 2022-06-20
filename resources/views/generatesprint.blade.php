@@ -32,16 +32,16 @@ padding: 0 10px;">
     <label>Valandos</label>
     <div class="row">
         <div class="col-sm">
-            <input type="number" class="form-control" name="sprintSUHours" value="1" max="11" min="0" required/>
+            <input type="number" class="form-control" name="sprintSUHours" value="0" max="11" min="0" required/>
         </div>
         <div class="col-sm">
-            <input type="number" class="form-control" name="sprintSPHours" value="1" max="11" min="0" required/>
+            <input type="number" class="form-control" name="sprintSPHours" value="2" max="11" min="0" required/>
         </div>
         <div class="col-sm">
             <input type="number" class="form-control" name="sprintRHours" value="1" max="11" min="0" required/>
         </div>
         <div class="col-sm">
-            <input type="number" class="form-control" name="sprintSAHours" value="1" max="11" min="0" required/>
+            <input type="number" class="form-control" name="sprintSAHours" value="2" max="11" min="0" required/>
         </div>
         <div class="col-sm">
         </div>
@@ -51,17 +51,17 @@ padding: 0 10px;">
     <label>Minutes</label>
     <div class="row">
         <div class="col-sm">
-            <input type="number" class="form-control" name="sprintSUMinutes" value="30" max="59" min="0" required/>
+            <input type="number" class="form-control" name="sprintSUMinutes" value="15" max="59" min="0" required/>
         </div>
         <div class="col-sm">
-            <input type="number" class="form-control" name="sprintSPMinutes" value="30" max="59" min="0" required/>
+            <input type="number" class="form-control" name="sprintSPMinutes" value="0" max="59" min="0" required/>
         </div>
         <div class="col-sm">
             <input type="number" class="form-control" name="sprintRMinutes" value="30" max="59" min="0" required/>
 
         </div>
         <div class="col-sm">
-            <input type="number" class="form-control" name="sprintSAMinutes" value="30" max="59" min="0" required/>
+            <input type="number" class="form-control" name="sprintSAMinutes" value="0" max="59" min="0" required/>
 
         </div>
         <div class="col-sm">
@@ -127,12 +127,9 @@ padding: 0 10px;">
 <br>
 
 
-<div class="form-group">
-    <label>Aprasas</label>
-    <textarea type="text" class="form-control" name="eventBody" rows="3"></textarea>
-</div>
 
-  <br>
+
+
   <input type="submit" class="btn btn-primary mr-2" value="Generuoti" />
   <a class="btn btn-secondary" href=/eventGenerate>Atsaukti</a>
 </form>
