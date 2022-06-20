@@ -38,18 +38,21 @@ class ProjectController extends Controller
 
         // Teams by users id
         $myTeams = DB::table('team_members')->where('fk_userId', $userId)->get();
+
         foreach ($myTeams as $team) {
             // Projects by my teams
-            $projectId = DB::table('team_projects')->where('fk_teamId', $team->fk_teamId)->value('fk_projectId');
+            $projectId = DB::table('team_projects')->where('fk_teamId', $team->fk_teamId)->get('fk_projectId');
             if (!is_null($projectId)) {
                 $projectIds = $projectIds->merge($projectId);
             }
         }
 
-        foreach ($projectIds as $id) {
-            $myprojects = DB::table('projects')->where('projectId', $id)->get()->first();
-            if (!is_null($myprojects)) {
-                array_push($allMyProjects, $myprojects);
+        foreach ($projectIds as $ids) {
+            foreach($ids as $id){
+                $myprojects = DB::table('projects')->where('projectId', $id)->get()->first();
+                if (!is_null($myprojects)) {
+                    array_push($allMyProjects, $myprojects);
+                }
             }
         }
         $allMyProjects = collect($allMyProjects)->sortBy('projectName')->toArray();

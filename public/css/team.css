@@ -142,7 +142,7 @@ table.table td:last-child {
 }
 
 table.table td a {
-    color: #a0a5b1;
+    /* color: #a0a5b1; */
     display: inline-block;
     margin: 0 5px;
 }
@@ -152,7 +152,7 @@ table.table td a.view {
 }
 
 table.table td a.edit {
-    color: #FFC107;
+    color: #858484;
 }
 
 table.table td a.delete {
