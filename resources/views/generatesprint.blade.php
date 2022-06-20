@@ -33,6 +33,7 @@ padding: 0 10px;">
     <div class="row">
         <div class="col-sm">
             <input type="number" class="form-control" name="sprintSUHours" value="0" max="11" min="0" required/>
+            <input type="number" class="form-control" name="idas" value="{{$idss}}" hidden/>
         </div>
         <div class="col-sm">
             <input type="number" class="form-control" name="sprintSPHours" value="2" max="11" min="0" required/>
@@ -89,39 +90,8 @@ padding: 0 10px;">
     </div>
 </div>
 <div>
-<label title="Nurodo nuo kokios dienos bei laiko ieskoti anksciausio laisvo laiko">Sprinto Duomenys:</label>
-    <div class="row">
-      <div class="col-sm">
-        <label title="Sprinto trukme nurodoma sprintu kiekiu">Trukme:</label>
-      </div>
-      <div class="col-sm">
-        <label title="Pacio sprinto trukme nurodoma savaitemis">Sprinto Trukme:</label>
-      </div>
-      <div class="col-sm">
-      </div>
-      <div class="col-sm">
-      </div>
-      <div class="col-sm">
-      </div>
-      <div class="col-sm">
-      </div>
-  </div>
-  <div class="row">
-    <div class="col-sm">
-        <input type="number" class="form-control" name="SprintLength" value="4" max="13" min="1" required/>
-    </div>
-    <div class="col-sm">
-        <input type="number" class="form-control" name="OneSprintLength" value="2" max="4" min="1" required/>
-    </div>
-    <div class="col-sm">
-    </div>
-    <div class="col-sm">
-    </div>
-    <div class="col-sm">
-    </div>
-    <div class="col-sm">
-    </div>
-</div>
+
+
 </div>
 
 <br>

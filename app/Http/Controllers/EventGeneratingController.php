@@ -250,9 +250,9 @@ private function getFreeTimes($array, $days, $startinit, $start, $tempStart, $te
         // //dd($array[$i][0]->format('Y-m-d'), $days[$daynumber][0]->format('Y-m-d'));
         $compare= new \DateTimeImmutable($array[$i][0]->format('Y-m-d'), $timezone);
         // print_r($daynumber);
-        // if($daynumber == 1){
-        //     return $days;
-        // }
+        if(count($days) == $daynumber){
+            return $days;
+        }
         if($compare > $days[$daynumber][0]){
 
             //dd($start->format('Y-m-d\TH:i'), $tempStart->format('Y-m-d\TH:i'));
@@ -514,13 +514,14 @@ private function getCorrectTime($days, $rezerve,$minutes,$hours){
     return false;
 
 }
-public function getGenerateSprintForm()
+public function getGenerateSprintForm($id)
 {
   $viewData = $this->loadViewData();
   $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
   $now = new \DateTimeImmutable('now', $timezone);
   $viewData['nowtime']=$now->format('H:i');
   $viewData['nowdatee']=$now->format('Y-m-d');
+  $viewData['idss']=$id;
   return view('generatesprint', $viewData);
 }
 public function generateSprint(Request $request)
@@ -535,6 +536,30 @@ public function generateSprint(Request $request)
 //     'eventBody' => 'nullable|string'
 //   ]);
     //dd($request->eventDay, $request->eventDay ,$request->rezerve,$request->minutes,$request->hours);
+    $userId = DB::table('users')->where('userEmail', session()->get('userEmail'))->value('userId');
+    $teamIds = DB::table('team_projects')->where('fk_projectId', $request->idas)->get();
+    foreach($teamIds as $teamas){
+        $teamId = DB::table('team_members')->where('fk_userId', $userId)->where('fk_teamId', $teamas->fk_teamId)->value('fk_teamId');
+    }
+    $userIds = DB::table('team_members')->where('fk_teamId', $teamId)->get('fk_userId');
+    $teamUsers = [];
+    foreach($userIds as $iter){
+
+        $tempUser = DB::table('users')->where('userId', $iter->fk_userId)->first();
+        array_push($teamUsers, $tempUser);
+
+    }
+    $projectName = DB::table('projects')->where('projectId', $request->idas)->first('projectName');
+    $projectStart = DB::table('projects')->where('projectId', $request->idas)->first('start');
+    $sprintDuration = DB::table('projects')->where('projectId', $request->idas)->first('sprintDuration');
+    $sprintCount = DB::table('projects')->where('projectId', $request->idas)->first('sprintCount');
+    $teamName = DB::table('teams')->where('teamId', $teamId)->first('teamName');
+    $teamName = $teamName->teamName;
+    $projectName = $projectName->projectName;
+    $projectStart = $projectStart->start;
+    $sprintDuration = $sprintDuration->sprintDuration;
+    $sprintCount = $sprintCount->sprintCount;
+    // dd($projectName, $teamName, $projectStart, $sprintDuration, $sprintCount);
 
   $viewData = $this->loadViewData();
   $timezone = TimeZones::getTzFromWindows($viewData['userTimeZone']);
@@ -543,11 +568,11 @@ public function generateSprint(Request $request)
   if (microtime(true) > session('tokenExpires')){
     return redirect('/signin');
 }
-  $dayCount = $request->OneSprintLength * 7 * $request->SprintLength;
-  $now = new \DateTimeImmutable('now', $timezone);
-  $now = new \DateTimeImmutable($now->format('Y-m-d'), $timezone);
-  $now = $now->add(new DateInterval('P'. 8 - $now->format('N') .'D'));
-  $end = $now->add(new DateInterval('P'. $request->OneSprintLength * 7 * $request->SprintLength.'D'));
+  $dayCount = $sprintCount * 7 * $sprintDuration;
+
+  $now = new \DateTimeImmutable($projectStart, $timezone);
+  $end = $now->add(new DateInterval('P'. $dayCount .'D'));
+
   $start = new \DateTimeImmutable($now->format('Y-m-d'). "T" . '00:00', $timezone);
   $tempStart= new \DateTimeImmutable($now->format('Y-m-d') . "T" . '08:00', $timezone);
   $tempEnd=new \DateTimeImmutable($now->format('Y-m-d') . "T" . '19:00', $timezone);
@@ -557,7 +582,28 @@ public function generateSprint(Request $request)
   $sprintMinutes = [$request->sprintSUMinutes, $request->sprintSPMinutes, $request->sprintRMinutes, $request->sprintSAMinutes];
 
 //   dd($start, $tempStart, $tempEnd, $temp0, $now, $end);
-  $queryParams = array(
+$oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+    'clientId'                => config('azure.appId'),
+    'clientSecret'            => config('azure.appSecret'),
+    'redirectUri'             => config('azure.redirectUri'),
+    'urlAuthorize'            => config('azure.authority').config('azure.authorizeEndpoint'),
+    'urlAccessToken'          => config('azure.authority').config('azure.tokenEndpoint'),
+    'urlResourceOwnerDetails' => '',
+    'scopes'                  => config('azure.scopes')
+  ]);
+  $array = [];
+  $array1 = [];
+  $array2 = [];
+foreach($teamUsers as $teamUser){
+
+$newAccessToken = $oauthClient->getAccessToken('refresh_token', [
+    'refresh_token' => $teamUser->refreshToken
+]);
+$accessToken = $newAccessToken->getToken();
+$affected = DB::table('users')
+              ->where('userId', $teamUser->userId)
+              ->update(['accessToken' => $accessToken]);
+$queryParams = array(
     'startDateTime' => $now->format(\DateTimeInterface::ISO8601),
     'endDateTime' => $end->format(\DateTimeInterface::ISO8601),
     // Only request the properties used by the app
@@ -567,11 +613,12 @@ public function generateSprint(Request $request)
     // Limit results to 25
     '$top' => 100
   );
-  $getEventsUrl = '/me/calendarView?'.http_build_query($queryParams);
+  $getEventsUrl = '/me/calendar/calendarView?'.http_build_query($queryParams);
     //dd(microtime(true));
     if (microtime(true) > session('tokenExpires')){
         return redirect('/signin');
     }
+    $graph->setAccessToken($accessToken);
     $events = $graph->createRequest('GET', $getEventsUrl)
       // Add the user's timezone to the Prefer header
       ->addHeaders(array(
@@ -579,10 +626,20 @@ public function generateSprint(Request $request)
       ))
       ->setReturnType(Model\Event::class)
       ->execute();
-  $array = [];
+
   foreach($events as $event) {
-    $array[] = [new \DateTimeImmutable($event->getStart()->getDateTime(), $timezone), new \DateTimeImmutable($event->getEnd()->getDateTime(), $timezone)];
+    $array1[] = new \DateTimeImmutable($event->getStart()->getDateTime(), $timezone);
+    $array2[] = new \DateTimeImmutable($event->getEnd()->getDateTime(), $timezone);
   }
+}
+
+if (!empty($array1)) {
+    array_multisort($array1,$array2);
+}
+
+for($i = 0; $i < count($array1); ++$i) {
+   $array[$i] = [$array1[$i], $array2[$i]];
+}
 
   $days = [];
   $temp = $now;
@@ -593,19 +650,22 @@ public function generateSprint(Request $request)
       }
       $temp = $temp->add(new DateInterval('P1D'));
   }
-
   $arrays = $this->getFreeTimes($array, $days, $now, $start, $tempStart, $tempEnd, $temp0, $timezone);
-  $result = $this->getCorrectSprint($arrays, $request->rezerve,$sprintHours,$sprintMinutes, $request->OneSprintLength, $request->SprintLength);
-//   dd($result);
-  //   dd($result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i'), $result[1]->format('Y-m-d') . "T" . $result[1]->format('H:i'));
+  $result = $this->getCorrectSprint($arrays, $request->rezerve,$sprintHours,$sprintMinutes, $sprintDuration, $sprintCount);
+//   dd($dayCount,$now, $end,$sprintHours, $sprintMinutes,$days, $result);
 
+  //   dd($result);
+  //   dd($result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i'), $result[1]->format('Y-m-d') . "T" . $result[1]->format('H:i'));
+if($result != false){
   foreach($result as $r){
       if($r[0] != "Nera tokio laiko"){
+        $eventSubjektas = 'Komandos '. $teamName . ', Projekto ' . $projectName. ' Ivykis';
         $EndTimeStart = $r[0]->format('Y-m-d') . "T" . $r[0]->format('H:i');
         $EndTimeDate = $r[1]->format('Y-m-d') . "T" . $r[1]->format('H:i');
+        $newEvent = [];
         if ('Sreview' == $r[2]){
         $newEvent = [
-            'subject' => $request->eventBody,
+            'subject' => $eventSubjektas,
             'start' => [
               'dateTime' => $EndTimeStart,
               'timeZone' => $viewData['userTimeZone']
@@ -615,19 +675,16 @@ public function generateSprint(Request $request)
               'timeZone' => $viewData['userTimeZone']
             ],
             'body' => [
-              'content' => $request->eventBody,
+              'content' => $eventSubjektas,
               'contentType' => 'text'
             ],
             'categories' => ['Red category']
           ];
-          $response = $graph->createRequest('POST', '/me/events' )
-    ->attachBody($newEvent)
-    ->setReturnType(Model\Event::class)
-    ->execute();
+
         }
         else if ('SprintPlanning' == $r[2]){
             $newEvent = [
-                'subject' => $request->eventBody,
+                'subject' => $eventSubjektas,
                 'start' => [
                   'dateTime' => $EndTimeStart,
                   'timeZone' => $viewData['userTimeZone']
@@ -637,19 +694,16 @@ public function generateSprint(Request $request)
                   'timeZone' => $viewData['userTimeZone']
                 ],
                 'body' => [
-                  'content' => $request->eventBody,
+                  'content' => $eventSubjektas,
                   'contentType' => 'text'
                 ],
                 'categories' => ['Green category']
               ];
-              $response = $graph->createRequest('POST', '/me/events' )
-    ->attachBody($newEvent)
-    ->setReturnType(Model\Event::class)
-    ->execute();
+
             }
             else if ('Retro' == $r[2]){
                 $newEvent = [
-                    'subject' => $request->eventBody,
+                    'subject' => $eventSubjektas,
                     'start' => [
                       'dateTime' => $EndTimeStart,
                       'timeZone' => $viewData['userTimeZone']
@@ -659,19 +713,16 @@ public function generateSprint(Request $request)
                       'timeZone' => $viewData['userTimeZone']
                     ],
                     'body' => [
-                      'content' => $request->eventBody,
+                      'content' => $eventSubjektas,
                       'contentType' => 'text'
                     ],
                     'categories' => ['Orange category']
                   ];
-                  $response = $graph->createRequest('POST', '/me/events' )
-    ->attachBody($newEvent)
-    ->setReturnType(Model\Event::class)
-    ->execute();
+
                 }
                 else if ('standup' == $r[2]){
                     $newEvent = [
-                        'subject' => $request->eventBody,
+                        'subject' => $eventSubjektas,
                         'start' => [
                           'dateTime' => $EndTimeStart,
                           'timeZone' => $viewData['userTimeZone']
@@ -681,17 +732,22 @@ public function generateSprint(Request $request)
                           'timeZone' => $viewData['userTimeZone']
                         ],
                         'body' => [
-                          'content' => $request->eventBody,
+                          'content' => $eventSubjektas,
                           'contentType' => 'text'
                         ],
-                        'categories' => ['Yellow category']
+                        'categories' => ['Blue category']
                       ];
+
+                    }
+                    foreach($teamUsers as $teamUser){
+                        $graph->setAccessToken($teamUser->accessToken);
                       $response = $graph->createRequest('POST', '/me/events' )
-    ->attachBody($newEvent)
-    ->setReturnType(Model\Event::class)
-    ->execute();
+                        ->attachBody($newEvent)
+                        ->setReturnType(Model\Event::class)
+                        ->execute();
                     }
       }
+    }
 
   }
 //   $EndTimeStart = $result[0]->format('Y-m-d') . "T" . $result[0]->format('H:i');

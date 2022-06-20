@@ -82,9 +82,9 @@ class CalendarController extends Controller
                 'end' => $event->getEnd()->getDateTime(),
                 'location' => $event->getLocation()->getDisplayName(),
                 'description' => $event->getBodyPreview(),
-                'backgroundColor' => 'red',
-                'borderColor' => 'red',
-                'color' => 'red',
+                'backgroundColor' => 'yellow',
+                'borderColor' => 'yellow',
+                'color' => 'lightblue',
                 'eventType' => 'Sprint Review :',
                 'eventId' => $event->getId(),
               ]);
@@ -123,7 +123,7 @@ class CalendarController extends Controller
               ]);
 
         }
-        elseif ($event->getCategories()[0] == 'Yellow category'){
+        elseif ($event->getCategories()[0] == 'Blue category'){
             array_push($formevents, [
                 // Add the email address in the emailAddress property
                 'title' => $event->getSubject(),
@@ -131,9 +131,9 @@ class CalendarController extends Controller
                 'end' => $event->getEnd()->getDateTime(),
                 'location' => $event->getLocation()->getDisplayName(),
                 'description' => $event->getBodyPreview(),
-                'backgroundColor' => 'yellow',
-                'borderColor' => 'yellow',
-                'color' => 'yellow',
+                'backgroundColor' => 'blue',
+                'borderColor' => 'blue',
+                'color' => 'lightblue',
                 'eventType' => 'Stand-Up :',
                 'eventId' => $event->getId(),
               ]);
