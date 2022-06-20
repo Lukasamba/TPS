@@ -28,14 +28,11 @@
 </div>
 
 <body>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
     <script>
         $('#exampleModal').on('show.bs.modal',
@@ -75,12 +72,15 @@
             })
     </script>
 
-    <h3>Komandų sąrašas</h3>
+    <div style="margin: 10px auto; padding: 0 10px;">
+        <a class="btn btn-secondary" href="/teams/create" padding="15px 32px">Sukurti komandą</a>
+        <h3>Komandų sąrašas</h3>
+    </div>
 
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">Identifikatorius</th>
                 <th scope="col">Komandos pavadinimas</th>
                 <th></th>
         </thead>
@@ -88,9 +88,9 @@
         <tbody>
             @foreach($teams as $team)
             <tr>
-                <td>{{$team->teamId}}</td>
-                <td>{{$team->teamName}}</td>
-                <td>
+                <td width="10%">{{$team->teamId}}</td>
+                <td width="80%">{{$team->teamName}}</td>
+                <td width="10%">
                     <a href="#" class="view" title="View" data-name="{{$team->teamName}}"" data-id=" {{$team->teamId}}" data-toggle="modal" data-target="#exampleModal">
                         <i class="material-icons">&#xE417;</i></a>
                     <!-- <a href="#" class="edit" title="Edit" data-toggle="tooltip">
@@ -103,9 +103,6 @@
         </tbody>
     </table>
 
-    <div class="main">
-        <a href="/teams/create">Sukurti komandą</a>
-    </div>
 </body>
 
 @endsection

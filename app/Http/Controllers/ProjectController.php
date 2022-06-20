@@ -32,12 +32,12 @@ class ProjectController extends Controller
 
         // Returns all projects
         $allprojects = Project::all();
+        
         // Get users id
         $userId = DB::table('users')->where('userEmail', session()->get('userEmail'))->value('userId');
-        // dd($userId);
+
         // Teams by users id
         $myTeams = DB::table('team_members')->where('fk_userId', $userId)->get();
-        // dd($myTeams);
         foreach ($myTeams as $team) {
             // Projects by my teams
             $projectId = DB::table('team_projects')->where('fk_teamId', $team->fk_teamId)->value('fk_projectId');

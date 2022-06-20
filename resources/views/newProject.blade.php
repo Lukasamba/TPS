@@ -2,50 +2,58 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('/css/form.css') }}">
-
 {{-- Klaidų metimui --}}
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
-<div class="container">
-    <div class="title">Projekto sukūrimo langas</div>
-    <form action="{{ url('saveProject') }}" method="POST">
-        @csrf
-        <div class="project_details">
+<body>
+    <div style="max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 10px;">
+        <h1>Projekto kūrimas</h1>
+        <form action="{{ url('saveProject') }}" method="POST">
+            @csrf
             <div class="form-group">
-                <span class="details">Pavadinimas</span>
-                <input type="text" class="form-control" name="projectName" placeholder="Įrašykite projekto pavadinimą">
+                <br>
+                <label>Projekto pavadinimas:</label>
+                <div class="row">
+                    <div class="col-sm">
+                        <input type="text" class="form-control" name="projectName" placeholder="Įrašykite projekto pavadinimą" required oninvalid="this.setCustomValidity('Prašome įvesti pavadinimą :)')" oninput="setCustomValidity('')">
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <span class="details">Aprašymas</span>
-                <textarea type="text" class="form-control" name="projectDescription" rows="3"
-                    placeholder="Įrašykite projekto aprašymą"></textarea>
-            {{-- </div>
-            <div class="form-group">
+                <br>
+                <label>Aprašymas:</label>
+                <div class="row">
+                    <div class="col-sm">
+                        <textarea type="text" class="form-control" name="projectDescription" rows="3" placeholder="Įrašykite projekto aprašymą" required oninvalid="this.setCustomValidity('Prašome įvesti aprašymą :)')" oninput="setCustomValidity('')"></textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="form-group">
                 <span class="details">Pradžia</span>
                 <input type="date" class="form-control" id="txtDate" name="startDate" />
             </div>
             <div class="form-group">
                 <span class="details">Pabaiga</span>
                 <input type="date" class="form-control" id="txtDate" name="endDate" />
-            </div>
-            <div class="form-group2">
+            </div> -->
+            <div class="form-group" style="padding-top: 10px;">
                 <span class="details">Sprintu kiekis</span>
                 <input type="number" id="quantity" name="sprintQuantity" min="1" max="10" placeholder="10">
-            </div>
-            <div class="form-group2">
                 <span class="details">Sprintu ilgis</span>
                 <input type="number" id="quantity" name="sprintLength" min="1" max="7" placeholder="7">
-            </div> --}}
-            <div class="form-group2">
+            </div>
+
+            <div class="form-group" style="padding-top: 10px;">
                 <span class="details">Projekto komandos</span>
                 <select name="teamId" id="">
                     @foreach ($teams as $team)
@@ -53,13 +61,16 @@
                     @endforeach
                 </select>
             </div>
-        </div>
-        <div class="buttons">
-            <button type="submit" class="btn btn-primary">Sukurti</button>
-            <a class="btn btn-secondary" href=/projects>Atšaukti</a>
-        </div>
+            <div class="buttons" style="padding-top: 10px;">
+                <button type="submit" class="btn btn-primary">Sukurti</button>
+                <a class="btn btn-secondary" href=/projects>Atšaukti</a>
+            </div>
+    </div>
+
     </form>
-</div>
+    </div>
+</body>
+
 <!-- 
 {{-- <div class="container">
     <h1>Sukurti projekta</h1>
