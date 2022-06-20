@@ -47,12 +47,12 @@
                 <input type="date" class="form-control" id="txtDate" name="endDate" />
             </div> -->
             <div class="form-group" style="padding-top: 10px;">
-                <span class="details">Sprintu kiekis</span>
-                <input type="number" id="quantity" name="sprintQuantity" min="1" max="12" placeholder="4" required>
-                <span class="details">Sprintu ilgis</span>
-                <input type="number" id="quantity" name="sprintLength" min="1" max="4" placeholder="2" required>
-                <span class="details">Sprinto pradzia</span>
-                <input type="date" id="txtDate" name="startDate" style="width: 200px;"/>
+                <span class="details">SPRINT kiekis</span>
+                <input type="number" id="quantity" name="sprintQuantity" min="1" max="12" placeholder="4" required oninvalid="this.setCustomValidity('Prašome įvesti skaičių :)')" oninput="setCustomValidity('')">
+                <span class="details">SPRINT ilgis</span>
+                <input type="number" id="quantity" name="sprintLength" min="1" max="4" placeholder="2" required oninvalid="this.setCustomValidity('Prašome įvesti skaičių :)')" oninput="setCustomValidity('')">
+                <span class="details">SPRINT pradžia</span>
+                <input type="date" id="txtDate" name="startDate" style="width: 200px;" required oninvalid="this.setCustomValidity('Prašome įvesti teisingą datą nuo šiandienos :)')" oninput="setCustomValidity('')"/>
             </div>
 
             <div class="form-group" style="padding-top: 10px;">

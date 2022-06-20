@@ -4,77 +4,78 @@
 
 {{-- Klaidų metimui --}}
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+  <ul>
+    @foreach ($errors->all() as $error)
+    <li>{{ $error }}</li>
+    @endforeach
+  </ul>
+</div>
 @endif
 
 <div style="max-width: 1100px;
 margin: 40px auto;
 padding: 0 10px;">
-<h1>Sukurti</h1>
-<form method="POST" action="{{route('createNewEvent')}}">
-  @csrf
-  <div class="form-group">
-    <label>Ivykio pavadinimas</label>
-    <input type="text" class="form-control" name="eventSubject" />
-  </div>
-  <div class="row">
-    <div class="col-sm">
-      <div class="form-group">
-        <label>Diena</label>
-        <input type="date" class="form-control" id="txtDate" name="eventDay" id="eventDay"/>
-      </div>
-      @error('eventDay')
-        <div class="alert alert-danger">{{ $message }}</div>
-      @enderror
-    </div>
-    <div class="col-sm">
-      <div class="form-group">
-        <label>Pradzia</label>
-        <input type="time" class="form-control" name="timeStart" id="timeStart" min="08:00" max="19:00"/>
-      </div>
-      @error('timeStart')
-        <div class="alert alert-danger">{{ $message }}</div>
-      @enderror
-    </div>
-  <div class="col-sm">
+  <h1>Sukurti</h1>
+  <form method="POST" action="{{route('createNewEvent')}}">
+    @csrf
     <div class="form-group">
-      <label>Pabaiga</label>
-      <input type="time" class="form-control" name="timeEnd" id="timeEnd" min="08:00" max="19:00"/>
+      <label>Įvykio pavadinimas</label>
+      <input type="text" class="form-control" name="eventSubject" required oninvalid="this.setCustomValidity('Prašome įvesti pavadinimą :)')" oninput="setCustomValidity('')"/>
     </div>
-    @error('timeEnd')
-      <div class="alert alert-danger">{{ $message }}</div>
-    @enderror
-  </div>
+    <div class="row">
+      <div class="col-sm">
+        <div class="form-group">
+          <label>Diena</label>
+          <input type="date" class="form-control" id="txtDate" name="eventDay" id="eventDay" required oninvalid="this.setCustomValidity('Prašome įvesti dieną :)')" oninput="setCustomValidity('')"/>
+        </div>
+        @error('eventDay')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+      </div>
+      <div class="col-sm">
+        <div class="form-group">
+          <label>Pradžia</label>
+          <input type="time" class="form-control" name="timeStart" id="timeStart" min="08:00" max="19:00" required oninvalid="this.setCustomValidity('Prašome įvesti laiką nuo 8h iki 19h :)')" oninput="setCustomValidity('')"/>
+        </div>
+        @error('timeStart')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+      </div>
+      <div class="col-sm">
+        <div class="form-group">
+          <label>Pabaiga</label>
+          <input type="time" class="form-control" name="timeEnd" id="timeEnd" min="08:00" max="19:00" required oninvalid="this.setCustomValidity('Prašome įvesti laiką nuo 8h iki 19h :)')" oninput="setCustomValidity('')"/>
+        </div>
+        @error('timeEnd')
+        <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+      </div>
 
-</div>
+    </div>
 
-  <div class="form-group">
-    <label>Aprasas</label>
-    <textarea type="text" class="form-control" name="eventBody" rows="3"></textarea>
-  </div>
-  <input type="submit" class="btn btn-primary mr-2" value="Sukurti" />
-  <a class="btn btn-secondary" href=/calendar>Atsaukti</a>
-</form>
+    <div class="form-group"">
+    <label>Aprašas</label>
+    <textarea type=" text" class="form-control" name="eventBody" rows="3" required oninvalid="this.setCustomValidity('Prašome įvesti aprašą :)')" oninput="setCustomValidity('')"></textarea>
+    </div>
+    <br>
+    <input type="submit" class="btn btn-primary mr-2" value="Sukurti" />
+    <a class="btn btn-secondary" href=/calendar>Atšaukti</a>
+  </form>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <script>
-    $(function(){
+  $(function() {
     var dtToday = new Date();
 
     var month = dtToday.getMonth() + 1;
     var day = dtToday.getDate();
     var year = dtToday.getFullYear();
-    if(month < 10)
-        month = '0' + month.toString();
-    if(day < 10)
-        day = '0' + day.toString();
+    if (month < 10)
+      month = '0' + month.toString();
+    if (day < 10)
+      day = '0' + day.toString();
 
     var maxDate = year + '-' + month + '-' + day;
 
@@ -82,6 +83,6 @@ padding: 0 10px;">
     // var maxDate = dtToday.toISOString().substr(0, 10);
 
     $('#txtDate').attr('min', maxDate);
-});
-    </script>
+  });
+</script>
 @endsection

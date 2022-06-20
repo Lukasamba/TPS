@@ -94,7 +94,7 @@
                 <a href="#" class="view" title="View" data-desc="{{$project->projectDescription}}" data-name="{{$project->projectName}}"" data-id=" {{$project->projectId}}" data-toggle="modal" data-target="#exampleModal">
                     <i class="material-icons">&#xE417;</i></a>
                 <a class="btn btn-primary" href="/eventGenerate/single/{{$project->projectId}}">Generuoti įvykį</a>
-                <a class="btn btn-primary" href="/eventGenerate/sprint/{{$project->projectId}}">Generuoti sprintą</a>
+                <a class="btn btn-primary" href="/eventGenerate/sprint/{{$project->projectId}}">Generuoti SPRINT</a>
             </td>
         </tr>
         @empty

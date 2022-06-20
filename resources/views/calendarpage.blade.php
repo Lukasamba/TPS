@@ -6,13 +6,13 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.6.0/main.css">
 
   <div id='top'>
-    Locales:
+    Kalba:
     <select id='locale-selector'></select>
 </div>
 <div style="max-width: 1100px;
 margin: 40px auto;
 padding: 0 10px;">
-<a class="btn btn-primary" href=/calendar/new>Sukurti</a>
+<a class="btn btn-secondary" href=/calendar/new>Sukurti</a>
 </div>
 <div id='calendar'>
 
